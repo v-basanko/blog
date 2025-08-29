@@ -4,6 +4,7 @@ import {MdNoteAlt} from "react-icons/md";
 import SearchInput from "@/components/layout/search-input";
 import Notifications from "@/components/layout/notifications";
 import UserButton from "@/components/layout/user-button";
+import Link from "next/link";
 
 const NavBar = () => {
     return (<nav className="sticky top-o border-b z-50 ligth: bg-white dark:bg-slate-950">
@@ -18,6 +19,10 @@ const NavBar = () => {
                     <ThemeToggle/>
                     <Notifications/>
                     <UserButton />
+                    <>
+                        <Link href="/login">Login</Link>
+                        <Link href="/register">Register</Link>
+                    </>
                 </div>
             </div>
         </Container>
