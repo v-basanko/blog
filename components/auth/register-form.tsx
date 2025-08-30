@@ -7,8 +7,15 @@ import FormField from "@/components/common/form-field";
 import Button from "@/components/common/button";
 import Heading from "@/components/common/heading";
 import SocialAuth from "@/components/auth/social-auth";
+import {signUp} from "@/actions/auth/register";
+import {useState, useTransition} from "react";
+import Alert from "@/components/common/alert";
 
 const RegisterForm = () => {
+
+    const [ isPending, startTransition ] = useTransition();
+    const [ error, setError ] = useState<string | undefined>();
+    const [ success, setSuccess ] = useState<string | undefined>();
 
     const {
         register,
@@ -17,7 +24,13 @@ const RegisterForm = () => {
     } = useForm<RegisterSchemaType>({resolver: zodResolver(RegisterSchema)});
 
     const onSubmit: SubmitHandler<RegisterSchemaType> = (data: RegisterSchemaType) => {
-        console.log(data);
+        setError('');
+        setSuccess('');
+        startTransition(async ()=>{
+            const result = await signUp(data);
+            setError(result.error);
+            setSuccess(result.success);
+        })
     }
 
     return (<form className="flex flex-col max-w-[500px] m-auto mt-8 gap-2" onSubmit={handleSubmit(onSubmit)}>
@@ -46,7 +59,11 @@ const RegisterForm = () => {
             register={register}
             placeholder="Confirm password"
             errors={errors}/>
-        <Button type="submit" label='Register'/>
+        <div>
+            {error && <Alert message={error} error/>}
+            {success && <Alert message={success} success/>}
+        </div>
+        <Button type="submit" label={ isPending ? 'Submitting' : 'Register' } disabled={isPending}/>
         <div className="flex justify-center my-2">Or</div>
         <SocialAuth/>
     </form>)

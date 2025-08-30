@@ -12,7 +12,7 @@ const NavBar = () => {
             <div className="flex justify-between items-center gap-8">
                 <div className="flex gap-1 items-center cursor-pointer">
                     <MdNoteAlt/>
-                    <div className="font-bold text-x1">Multi User Blog</div>
+                    <div className="font-bold text-x1">Next Blog</div>
                 </div>
                 <SearchInput/>
                 <div className="flex gap-5 sm:gap-8 items-center">

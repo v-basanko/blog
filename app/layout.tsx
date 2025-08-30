@@ -12,8 +12,8 @@ const popins = Poppins({
 });
 
 export const metadata: Metadata = {
-    title: "Multi User Blog",
-    description: "Next.js WebApp for Multi User Blog",
+    title: "Next Blog",
+    description: "Next.js WebApp Multi User Blog",
     icons: {icon: "/logo.svg"}
 };
 
