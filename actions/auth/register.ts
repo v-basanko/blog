@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import {db} from "@/lib/db";
 import {getUserByEmail} from "@/lib/user";
 
-export const signUp = async (data: RegisterSchemaType) => {
+export const register = async (data: RegisterSchemaType) => {
     const validateFields = RegisterSchema.safeParse(data);
 
     if(!validateFields.success) {

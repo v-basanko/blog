@@ -7,7 +7,7 @@ import FormField from "@/components/common/form-field";
 import Button from "@/components/common/button";
 import Heading from "@/components/common/heading";
 import SocialAuth from "@/components/auth/social-auth";
-import {signUp} from "@/actions/auth/register";
+import {register as registerUser} from "@/actions/auth/register";
 import {useState, useTransition} from "react";
 import Alert from "@/components/common/alert";
 
@@ -27,7 +27,7 @@ const RegisterForm = () => {
         setError('');
         setSuccess('');
         startTransition(async ()=>{
-            const result = await signUp(data);
+            const result = await registerUser(data);
             setError(result.error);
             setSuccess(result.success);
         })

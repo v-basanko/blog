@@ -4,6 +4,8 @@ import "./globals.css";
 import {cn} from "@/lib/utils";
 import NavBar from "@/components/layout/nav-bar";
 import {ThemeProvider} from "next-themes";
+import {SessionProvider} from "next-auth/react";
+import {auth} from "@/auth";
 
 const popins = Poppins({
     variable: "--font-poppins",
@@ -17,11 +19,13 @@ export const metadata: Metadata = {
     icons: {icon: "/logo.svg"}
 };
 
-export default function RootLayout({
+export default async function RootLayout({
                                        children,
                                    }: Readonly<{
     children: React.ReactNode;
 }>) {
+
+    const session = await auth();
 
     const themeInitScript = `
     try {
@@ -33,20 +37,22 @@ export default function RootLayout({
   `;
 
     return (
-        <html lang="en" suppressHydrationWarning>
-        <head>
-            <meta name="color-scheme" content="light dark" />
-            <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        </head>
-        <body
-            className={cn('antialiased flex flex-col min-h-screen px-2 text-black bg-white dark:bg-black dark:text-white', popins.variable)}
-        >
-        <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <NavBar/>
-            <main className="flex-grow">{children}</main>
-            <footer>...</footer>
-        </ThemeProvider>
-        </body>
-        </html>
+        <SessionProvider session={session}>
+            <html lang="en" suppressHydrationWarning>
+            <head>
+                <meta name="color-scheme" content="light dark"/>
+                <script dangerouslySetInnerHTML={{__html: themeInitScript}}/>
+            </head>
+            <body
+                className={cn('antialiased flex flex-col min-h-screen text-black bg-white dark:bg-black dark:text-white', popins.variable)}
+            >
+            <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
+                <NavBar/>
+                <main className="flex-grow">{children}</main>
+                <footer>...</footer>
+            </ThemeProvider>
+            </body>
+            </html>
+        </SessionProvider>
     );
 }
