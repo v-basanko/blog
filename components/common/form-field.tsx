@@ -12,7 +12,16 @@ interface FormFieldProps<T extends FieldValues> {
     errors: FieldErrors;
 }
 
-const FormField = <T extends FieldValues>({id, type, disabled, placeholder, label, inputClassNames, register, errors}: FormFieldProps<T>) => {
+const FormField = <T extends FieldValues>({
+                                              id,
+                                              type,
+                                              disabled,
+                                              placeholder,
+                                              label,
+                                              inputClassNames,
+                                              register,
+                                              errors
+                                          }: FormFieldProps<T>) => {
 
     const message = errors[id] && errors[id]?.message as string;
 

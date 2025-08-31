@@ -8,7 +8,8 @@ import {Bell} from "lucide-react";
 const Notifications = () => {
     return (<DropdownMenu>
         <DropdownMenuTrigger className="relative">
-            <div className="absolute bg-rose-500 h-6 w-6 rounded-full text-sm flex items-center justify-center bottom-2 left-2">
+            <div
+                className="absolute bg-rose-500 h-6 w-6 rounded-full text-sm flex items-center justify-center bottom-2 left-2">
                 <span>8</span>
             </div>
             <Bell size={20}/>

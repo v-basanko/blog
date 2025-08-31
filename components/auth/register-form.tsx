@@ -13,9 +13,9 @@ import Alert from "@/components/common/alert";
 
 const RegisterForm = () => {
 
-    const [ isPending, startTransition ] = useTransition();
-    const [ error, setError ] = useState<string | undefined>();
-    const [ success, setSuccess ] = useState<string | undefined>();
+    const [isPending, startTransition] = useTransition();
+    const [error, setError] = useState<string | undefined>();
+    const [success, setSuccess] = useState<string | undefined>();
 
     const {
         register,
@@ -26,7 +26,7 @@ const RegisterForm = () => {
     const onSubmit: SubmitHandler<RegisterSchemaType> = (data: RegisterSchemaType) => {
         setError('');
         setSuccess('');
-        startTransition(async ()=>{
+        startTransition(async () => {
             const result = await registerUser(data);
             setError(result.error);
             setSuccess(result.success);
@@ -63,7 +63,7 @@ const RegisterForm = () => {
             {error && <Alert message={error} error/>}
             {success && <Alert message={success} success/>}
         </div>
-        <Button type="submit" label={ isPending ? 'Submitting' : 'Register' } disabled={isPending}/>
+        <Button type="submit" label={isPending ? 'Submitting' : 'Register'} disabled={isPending}/>
         <div className="flex justify-center my-2">Or</div>
         <SocialAuth/>
     </form>)

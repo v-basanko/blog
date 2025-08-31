@@ -12,19 +12,19 @@ export default middleware((req) => {
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
-    if(isApiAuthRoute) {
+    if (isApiAuthRoute) {
         return;
     }
 
-    if(isAuthRoute) {
-        if(isLoggedIn) {
+    if (isAuthRoute) {
+        if (isLoggedIn) {
             return Response.redirect(new URL(LOGIN_REDIRECT, nextUrl));
         }
 
         return
     }
 
-    if(!isLoggedIn && !isPublicRoutes) {
+    if (!isLoggedIn && !isPublicRoutes) {
         return Response.redirect(new URL('/login', nextUrl));
     }
 

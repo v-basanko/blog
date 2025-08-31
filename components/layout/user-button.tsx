@@ -4,13 +4,18 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {LogOut, Pencil, Shield, User, UserRound} from "lucide-react";
 import {DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
 import {FaRegBookmark} from "react-icons/fa";
-import {signIn, signOut} from "next-auth/react";
+import {signIn, signOut, useSession} from "next-auth/react";
 
 const UserButton = () => {
+
+    const session = useSession();
+
+    const imageUrl = session.data?.user?.image || '';
+
     return (<DropdownMenu>
         <DropdownMenuTrigger>
             <Avatar>
-                <AvatarImage src=""/>
+                <AvatarImage src={imageUrl}/>
                 <AvatarFallback className="border-2 border-slate-500 dark:border-slate-50">
                     <UserRound/>
                 </AvatarFallback>
@@ -42,7 +47,7 @@ const UserButton = () => {
             </DropdownMenuItem>
             <DropdownMenuSeparator/>
             <DropdownMenuItem>
-                <button onClick={()=>signOut()} className="flex items-center gap-2" type="button">
+                <button onClick={() => signOut()} className="flex items-center gap-2" type="button">
                     <LogOut size={18}/> Sign Out
                 </button>
             </DropdownMenuItem>

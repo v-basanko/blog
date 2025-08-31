@@ -10,13 +10,16 @@ import SocialAuth from "@/components/auth/social-auth";
 import {useState, useTransition} from "react";
 import {login} from "@/actions/auth/login";
 import Alert from "@/components/common/alert";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {LOGIN_REDIRECT} from "@/routes";
+import Link from "next/link";
 
 const LoginForm = () => {
 
-    const [ isPending, startTransition ] = useTransition();
-    const [ error, setError ] = useState<string | undefined>();
+    const searchParams = useSearchParams();
+    const [isPending, startTransition] = useTransition();
+    const [error, setError] = useState<string | undefined>();
+    const [success, setSuccess] = useState<string | undefined>();
 
     const {
         register,
@@ -25,15 +28,21 @@ const LoginForm = () => {
     } = useForm<LoginSchemaType>({resolver: zodResolver(LoginSchema)});
 
     const router = useRouter();
+    const urlError = searchParams.get('error') === 'OAuthAccountNotLinked' ? 'Email in use with a different provider!' : '';
 
     const onSubmit: SubmitHandler<LoginSchemaType> = (data: LoginSchemaType) => {
         setError('');
-        startTransition(async ()=>{
+        router.replace('/login');
+        startTransition(async () => {
             const result = await login(data);
-            if(result?.error) {
+            if (result?.error) {
                 setError(result.error);
             } else {
                 router.push(LOGIN_REDIRECT)
+            }
+
+            if (result?.success) {
+                setSuccess(result?.success)
             }
         })
     }
@@ -54,12 +63,16 @@ const LoginForm = () => {
             placeholder="Enter your password"
             errors={errors}
             disabled={isPending}/>
-        <div>
-            {error && <Alert message={error} error/>}
-        </div>
-        <Button type="submit" label={ isPending ? 'Submitting' : 'Login' } disabled={isPending}/>
+        {error && <Alert message={error} error/>}
+        {success && <Alert message={success} success/>}
+        <Button type="submit" label={isPending ? 'Submitting' : 'Login'} disabled={isPending}/>
         <div className="flex justify-center my-2">Or</div>
+        {urlError && <Alert message={urlError} error/>}
         <SocialAuth/>
+        <div className="flex items-end justify-end">
+            <Link className="mt-2 text-sm underline text-slat-700 dark:text-slate-300" href="/forgot-password">Forgot
+                password?</Link>
+        </div>
     </form>)
 }
 

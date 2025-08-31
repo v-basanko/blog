@@ -11,9 +11,11 @@ const SocialAuth = () => {
         })
     }
 
-    return (<div className="flex flex-col gap-2 md:flex-row">
-        <Button onClick={() => handlOnClick('github')} type="button" label="Continue with GitHub" outlined icon={FaGithub} />
-        <Button onClick={() => handlOnClick('google')} type="button" label="Continue with Google" outlined icon={FaGoogle} />
+    return (<div className="flex flex-col justify-around gap-2 md:flex-row">
+        <Button onClick={() => handlOnClick('github')} type="button" label="Continue with GitHub" outlined
+                icon={FaGithub}/>
+        <Button onClick={() => handlOnClick('google')} type="button" label="Continue with Google" outlined
+                icon={FaGoogle}/>
     </div>)
 }
 export default SocialAuth;

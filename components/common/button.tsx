@@ -14,7 +14,7 @@ interface ButtonProps {
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Button = ({ label, disabled, outlined, small, icon: Icon, className, type, onClick }: ButtonProps) => {
+const Button = ({label, disabled, outlined, small, icon: Icon, className, type, onClick}: ButtonProps) => {
     return (
         <button
             type={type}

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const AuthLayout = ({children}: Readonly<{ children: React.ReactNode }>) => {
     return (<div>
-        { children }
+        {children}
     </div>)
 }
 

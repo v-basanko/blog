@@ -1,8 +1,8 @@
-const User = async ({ params }: { params: Promise<{ id: string }>}) => {
+const UserPage = async ({params}: { params: Promise<{ id: string }> }) => {
 
-    const { id } = await params;
+    const {id} = await params;
 
-    return (<>User Profile: { id }</>)
+    return (<>User Profile: {id}</>)
 }
 
-export default User;
+export default UserPage;

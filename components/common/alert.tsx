@@ -8,7 +8,7 @@ type AlertProps = {
     message: string;
 };
 
-const Alert = ({ success, error, message }: AlertProps) => {
+const Alert = ({success, error, message}: AlertProps) => {
     return (<div className={cn('my-2 flex items-center gap-2 p-3 rounded-md',
         success && 'bg-green-100 text-green-500',
         error && 'bg-rose-100 text-rose-500',
