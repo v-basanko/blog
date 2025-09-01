@@ -6,6 +6,7 @@ import NavBar from "@/components/layout/nav-bar";
 import {ThemeProvider} from "next-themes";
 import {SessionProvider} from "next-auth/react";
 import {auth} from "@/auth";
+import {EdgeStoreProvider} from "@/lib/edgestore";
 
 const popins = Poppins({
     variable: "--font-poppins",
@@ -37,22 +38,24 @@ export default async function RootLayout({
   `;
 
     return (
-        <SessionProvider session={session}>
-            <html lang="en" suppressHydrationWarning>
-            <head>
-                <meta name="color-scheme" content="light dark"/>
-                <script dangerouslySetInnerHTML={{__html: themeInitScript}}/>
-            </head>
-            <body
-                className={cn('antialiased flex flex-col min-h-screen text-black bg-white dark:bg-black dark:text-white', popins.variable)}
-            >
-            <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
-                <NavBar/>
-                <main className="flex-grow">{children}</main>
-                <footer>...</footer>
-            </ThemeProvider>
-            </body>
-            </html>
-        </SessionProvider>
+        <EdgeStoreProvider>
+            <SessionProvider session={session}>
+                <html lang="en" suppressHydrationWarning>
+                <head>
+                    <meta name="color-scheme" content="light dark"/>
+                    <script dangerouslySetInnerHTML={{__html: themeInitScript}}/>
+                </head>
+                <body
+                    className={cn('antialiased flex flex-col min-h-screen text-black bg-white dark:bg-black dark:text-white', popins.variable)}
+                >
+                <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
+                    <NavBar/>
+                    <main className="flex-grow">{children}</main>
+                    <footer>...</footer>
+                </ThemeProvider>
+                </body>
+                </html>
+            </SessionProvider>
+        </EdgeStoreProvider>
     );
 }
