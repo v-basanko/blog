@@ -5,10 +5,13 @@ import {LogOut, Pencil, Shield, User, UserRound} from "lucide-react";
 import {DropdownMenuSeparator} from "@radix-ui/react-dropdown-menu";
 import {FaRegBookmark} from "react-icons/fa";
 import {signIn, signOut, useSession} from "next-auth/react";
+import {useRouter} from "next/navigation";
 
 const UserButton = () => {
 
     const session = useSession();
+
+    const router = useRouter();
 
     const imageUrl = session.data?.user?.image || '';
 
@@ -29,7 +32,7 @@ const UserButton = () => {
             </DropdownMenuItem>
             <DropdownMenuSeparator/>
             <DropdownMenuItem>
-                <button className="flex items-center gap-2" type="button">
+                <button className="flex items-center gap-2" type="button" onClick={() => router.push('/blog/create')}>
                     <Pencil size={18}/> Create Post
                 </button>
             </DropdownMenuItem>

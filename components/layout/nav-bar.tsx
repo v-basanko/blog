@@ -8,12 +8,13 @@ import UserButton from "@/components/layout/user-button";
 import Link from "next/link";
 import {useSession} from "next-auth/react";
 import {useEffect} from "react";
-import {usePathname} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 
 const NavBar = () => {
     const session = useSession();
     const isLoggedIn = session.status === 'authenticated';
     const path = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         if (!isLoggedIn && path) {
@@ -27,7 +28,7 @@ const NavBar = () => {
     return (<nav className="sticky top-o border-b z-50 ligth: bg-white dark:bg-slate-950">
         <Container>
             <div className="flex justify-between items-center gap-8">
-                <div className="flex gap-1 items-center cursor-pointer">
+                <div className="flex gap-1 items-center cursor-pointer" onClick={() => router.push('/blog/feed/1')}>
                     <MdNoteAlt/>
                     <div className="font-bold text-x1">Next Blog</div>
                 </div>

@@ -18,6 +18,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   role          UserRole  @default(USER)
+  blogs Blog[]
 }
 
 model Account {
@@ -62,4 +63,16 @@ model ResetPasswordToken {
 enum UserRole {
   USER
   ADMIN
+}
+
+model Blog {
+  id         String   @id @default(cuid())
+  userId     String
+  title      String
+  content    String
+  coverImage String?
+  tags       String[]
+  isPublished Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
