@@ -18,7 +18,7 @@ interface BlogContentProps {
 
 const BlogContent = ({ blog, canEdit, createdAt }: BlogContentProps) => {
     return (<div className="flex flex-col max-w-[900px] m-auto gap-6">
-        {blog.coverImage && (<div className="w-full h-[35vh] mt-2">
+        {blog.coverImage && (<div className="relative w-full h-[35vh] mt-2">
             <Image src={blog.coverImage} fill alt="Cover Image" className="object-cover rounded"/>
         </div>)}
         <div className="flex justify-between items-center">
