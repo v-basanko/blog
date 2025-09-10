@@ -1,10 +1,11 @@
 'use server'
 
-import {BlogSchema, BlogSchemaType} from "@/schemas/blog-schema";
+import { BlogSchema, BlogSchemaType } from "@/schemas/blog-schema";
 import {getUserById} from "@/lib/user";
 import {db} from "@/lib/db";
 
-export const createBlog = async (data: BlogSchemaType) => {
+
+export const editBlog = async (data: BlogSchemaType, id: string) => {
     const validateFields = BlogSchema.safeParse(data);
 
     if (!validateFields.success) {
@@ -23,12 +24,18 @@ export const createBlog = async (data: BlogSchemaType) => {
         return {error: "User email is not verified!"}
     }
 
-    await db.blog.create({
+    const blog = await db.blog.findUnique({ where: { id } });
+
+    if (!blog) {
+        return {error: "Blog not found!"}
+    }
+
+    await db.blog.update({
+        where: { id },
         data: {
             ...validateFields.data,
-            userId,
         }
     });
 
-    return {success: "Blog created!"}
+    return {success: "Blog updated!"}
 }

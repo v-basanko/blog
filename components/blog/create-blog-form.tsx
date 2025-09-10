@@ -13,8 +13,10 @@ import {DynamicBlockNoteEditor} from "@/components/blog/editor/dynamic-block-not
 import Button from "@/components/common/button";
 import Alert from "@/components/common/alert";
 import {createBlog} from "@/actions/blogs/create-blog";
+import {Blog} from "@prisma/client";
+import {editBlog} from "@/actions/blogs/edit-blog";
 
-const CreateBlogForm = () => {
+const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
 
     const session = useSession();
     const userId = session.data?.user.userId;
@@ -27,7 +29,14 @@ const CreateBlogForm = () => {
 
     const {register, handleSubmit, formState: {errors}, setValue} = useForm<BlogSchemaType>({
         resolver: zodResolver(BlogSchema),
-        defaultValues: {
+        defaultValues:blog ? {
+            userId: blog.userId,
+            isPublished: blog.isPublished,
+            title: blog.title,
+            content: blog.content,
+            coverImage: blog.coverImage || undefined,
+            tags: blog.tags
+        } : {
             userId,
             isPublished: false
         }
@@ -53,6 +62,12 @@ const CreateBlogForm = () => {
         }
     }, [content]);
 
+    useEffect(()=>{
+        if(blog?.coverImage) {
+            setUploadedCover(blog.coverImage)
+        }
+    }, [ blog?.coverImage ])
+
     const onChange = (data: string) => {
         setContent(data);
     }
@@ -68,15 +83,28 @@ const CreateBlogForm = () => {
         const startTransition = isPublished ? startPublishTransition : startSaveDraftTransition;
 
         startTransition(() => {
-            createBlog({...data, isPublished}).then((result) => {
-                if (result.error) {
-                    setError(result.error);
-                }
+            if(blog) {
+                editBlog({...data, isPublished}, blog.id).then((result) => {
+                    if (result.error) {
+                        setError(result.error);
+                    }
 
-                if (result.success) {
-                    setSuccess(result.success);
-                }
-            })
+                    if (result.success) {
+                        setSuccess(result.success);
+                    }
+                })
+            } else {
+                createBlog({...data, isPublished}).then((result) => {
+                    if (result.error) {
+                        setError(result.error);
+                    }
+
+                    if (result.success) {
+                        setSuccess(result.success);
+                    }
+                })
+            }
+
         })
     }
 
@@ -123,7 +151,7 @@ const CreateBlogForm = () => {
                 {errors.tags && errors.tags.message &&
                     <span className="text-rose-400 text-sm">Select at least one tag, max of 4</span>}
             </fieldset>
-            <DynamicBlockNoteEditor onChange={onChange}/>
+            <DynamicBlockNoteEditor onChange={onChange} initialContent={blog?.content ? blog.content : ''}/>
             {errors.content && errors.content.message &&
                 <span className="text-rose-400 text-sm">{errors.content.message}</span>}
         </div>

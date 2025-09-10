@@ -9,6 +9,7 @@ import Link from "next/link";
 import {useSession} from "next-auth/react";
 import {useEffect} from "react";
 import {usePathname, useRouter} from "next/navigation";
+import Tags from "@/components/layout/tags/tags";
 
 const NavBar = () => {
     const session = useSession();
@@ -43,6 +44,7 @@ const NavBar = () => {
                     </>}
                 </div>
             </div>
+            <Tags/>
         </Container>
     </nav>)
 }

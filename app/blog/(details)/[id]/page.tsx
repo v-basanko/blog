@@ -1,13 +1,6 @@
 import {getBlogById} from "@/actions/blogs/get-blog-by-id";
 import Alert from "@/components/common/alert";
-import Image from "next/image";
-import UserSummary from "@/components/blog/user-summary";
 import {auth} from "@/auth";
-import Link from "next/link";
-import {Separator} from "@/components/ui/separator";
-import Reactions from "@/components/blog/reactions";
-import Tag from "@/components/common/tag";
-import BlockNoteEditor from "@/components/blog/editor/block-note-editor";
 import Container from "@/components/layout/container";
 import BlogContent from "@/components/blog/blog-content";
 

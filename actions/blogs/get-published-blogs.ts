@@ -2,8 +2,13 @@
 
 import {db} from "@/lib/db";
 
-export const getPublishedBlogs = async ({page = 1, limit = 5 }) => {
+export const getPublishedBlogs = async ({page = 1, limit = 5, searchObj}: {
+    page: number,
+    limit: number,
+    searchObj: { tag: string, title: string }
+}) => {
     const skip = (page - 1) * limit;
+    const {tag, title} = searchObj;
 
     try {
         const blogs = await db.blog.findMany({
@@ -13,7 +18,12 @@ export const getPublishedBlogs = async ({page = 1, limit = 5 }) => {
                 createdAt: 'desc',
             },
             where: {
+                title: {
+                    contains: title,
+                    mode: 'insensitive',
+                },
                 isPublished: true,
+                ...(tag ? {tags: {has: tag}} : {}),
             },
             include: {
                 user: {
@@ -26,12 +36,22 @@ export const getPublishedBlogs = async ({page = 1, limit = 5 }) => {
             }
         });
 
-        const totalBlogsCount = await db.blog.count({ where: { isPublished: true } });
+        const totalBlogsCount = await db.blog.count({
+            where: {
+                title: {
+                    contains: title,
+                    mode: 'insensitive',
+                },
+                isPublished: true,
+                ...(tag ? {tags: {has: tag}} : {}),
+            }
+        });
 
         const hasMore = page * limit < totalBlogsCount;
 
-        return { success: { blogs, hasMore } };
+        return {success: {blogs, hasMore}};
     } catch (e) {
-        return { error: "Error fetching blogs!" }
+        console.log(e);
+        return {error: "Error fetching blogs!"}
     }
 }
