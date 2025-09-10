@@ -1,11 +1,15 @@
 "use server"
 
 import {db} from "@/lib/db";
+import {auth} from "@/auth";
 
 export const getBlogById = async ({blogId}: { blogId: string }) => {
     if (!blogId) {
         return {error: "Blog id is required"};
     }
+
+    const session = await auth();
+    const userId = session?.user?.id;
 
     try {
         const blog = await db.blog.findUnique({
@@ -20,6 +24,27 @@ export const getBlogById = async ({blogId}: { blogId: string }) => {
                         image: true,
                     }
                 },
+                _count: {
+                    select: {
+                        claps: true,
+                    }
+                },
+                claps: {
+                    where: {
+                        userId
+                    },
+                    select: {
+                        id: true,
+                    }
+                },
+                bookmarks: {
+                    where: {
+                        userId
+                    },
+                    select: {
+                        id: true,
+                    }
+                }
             }
         });
 

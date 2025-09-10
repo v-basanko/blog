@@ -1,6 +1,7 @@
 'use server'
 
 import {db} from "@/lib/db";
+import {auth} from "@/auth";
 
 export const getPublishedBlogs = async ({page = 1, limit = 5, searchObj}: {
     page: number,
@@ -9,6 +10,9 @@ export const getPublishedBlogs = async ({page = 1, limit = 5, searchObj}: {
 }) => {
     const skip = (page - 1) * limit;
     const {tag, title} = searchObj;
+
+    const session = await auth();
+    const userId = session?.user?.userId;
 
     try {
         const blogs = await db.blog.findMany({
@@ -33,6 +37,27 @@ export const getPublishedBlogs = async ({page = 1, limit = 5, searchObj}: {
                         image: true,
                     }
                 },
+                _count: {
+                    select: {
+                        claps: true,
+                    }
+                },
+                claps: {
+                    where: {
+                        userId
+                    },
+                    select: {
+                        id: true,
+                    }
+                },
+                bookmarks: {
+                    where: {
+                        userId
+                    },
+                    select: {
+                        id: true,
+                    }
+                }
             }
         });
 
@@ -51,7 +76,6 @@ export const getPublishedBlogs = async ({page = 1, limit = 5, searchObj}: {
 
         return {success: {blogs, hasMore}};
     } catch (e) {
-        console.log(e);
         return {error: "Error fetching blogs!"}
     }
 }

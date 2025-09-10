@@ -17,6 +17,8 @@ const NavBar = () => {
     const path = usePathname();
     const router = useRouter();
 
+    const isFeedsPage = path.includes('/blog/feed');
+
     useEffect(() => {
         if (!isLoggedIn && path) {
             const updateSession = async () => {
@@ -33,7 +35,7 @@ const NavBar = () => {
                     <MdNoteAlt/>
                     <div className="font-bold text-x1">Next Blog</div>
                 </div>
-                <SearchInput/>
+                {isFeedsPage && <SearchInput/>}
                 <div className="flex gap-5 sm:gap-8 items-center">
                     <ThemeToggle/>
                     {isLoggedIn && <Notifications/>}

@@ -12,7 +12,7 @@ const BlogCard = ({blog, isUserProfile}: { blog: BlogWithUser, isUserProfile: bo
         </div>
         <div className="my-2 flex justify-between gap-6">
             <div className="flex flex-col justify-between w-full">
-                <Link href={`/blog/${blog.id}`} className="text-3xl sm:text-2x1 font-bold">
+                <Link href={`/blog/details/${blog.id}`} className="text-3xl sm:text-2x1 font-bold">
                     {blog.title}
                 </Link>
                 {blog.tags.length > 0 && (<div className="flex gap-4 items-center flex-wrap mb-2">
@@ -20,10 +20,10 @@ const BlogCard = ({blog, isUserProfile}: { blog: BlogWithUser, isUserProfile: bo
                         return (<Tag key={blog.id + tag}>{tag}</Tag>)
                     })}
                 </div>)}
-                <Reactions/>
+                <Reactions blog={blog}/>
             </div>
             {blog.coverImage &&
-                <Link href={`/blog/${blog.id}`} className="w-full max-w-[160px] h-[100px] relative overflow-hidden">
+                <Link href={`/blog/details/${blog.id}`} className="w-full max-w-[160px] h-[100px] relative overflow-hidden">
                     <Image
                         src={blog.coverImage}
                         fill

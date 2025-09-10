@@ -3,8 +3,8 @@ export const publicRoutes = [
     '/email-verification',
     '/forgot-password',
     '/reset-password',
-    '/blog/feed/1',
-    '/blog/:id'
+    /^\/blog\/feed\/\d+$/,
+    /^\/blog\/details\/[\w-]+$/,
 ];
 
 export const authRoutes = ['/login', '/register'];

@@ -27,7 +27,7 @@ const BlogContent = ({ blog, canEdit, createdAt }: BlogContentProps) => {
         </div>
         <div className="flex flex-col gap-2">
             <Separator/>
-            <Reactions/>
+            <Reactions blog={blog}/>
             <Separator/>
         </div>
         <h2 className="text-6xl font-bold">{blog.title}</h2>

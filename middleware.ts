@@ -4,11 +4,17 @@ import {apiAuthPrefix, authRoutes, LOGIN_REDIRECT, publicRoutes} from "@/routes"
 
 const {auth: middleware} = NextAuth(authConfig)
 
+const checkIsPublicRoute = (pathname: string) => {
+    return publicRoutes.some((route)=>
+        typeof route === 'string' ? route === pathname : route.test(pathname)
+    );
+}
+
 export default middleware((req) => {
     const {nextUrl} = req;
     const isLoggedIn = !!req.auth;
 
-    const isPublicRoutes = publicRoutes.includes(nextUrl.pathname);
+    const isPublicRoutes = checkIsPublicRoute(nextUrl.pathname);
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
 
