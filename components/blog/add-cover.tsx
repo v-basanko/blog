@@ -1,72 +1,72 @@
-"use client"
+'use client';
 
-import {useEdgeStore} from "@/lib/edgestore";
-import {useEffect, useRef, useState} from "react";
-import {ImageIcon} from "lucide-react";
+import { useEdgeStore } from '@/lib/edgestore';
+import { ImageIcon } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 interface AddCoverProps {
-    setUploadedCover: (cover: string) => void;
-    replaceUrl?: string
+  setUploadedCover: (cover: string) => void;
+  replaceUrl?: string;
 }
 
-const AddCover = ({setUploadedCover, replaceUrl}: AddCoverProps) => {
-    const imgRef = useRef<HTMLInputElement | null>(null);
-    const [file, setFile] = useState<File | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const {edgestore} = useEdgeStore();
+const AddCover = ({ setUploadedCover, replaceUrl }: AddCoverProps) => {
+  const imgRef = useRef<HTMLInputElement | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const { edgestore } = useEdgeStore();
 
-    const handleUpload = () => imgRef.current?.click();
+  const handleUpload = () => imgRef.current?.click();
 
-    useEffect(() => {
-        let isMounted = true;
-        const uplodadFile = async () => {
-            if (!file) {
-                return;
-            }
-            setIsUploading(true);
+  useEffect(() => {
+    let isMounted = true;
+    const uplodadFile = async () => {
+      if (!file) {
+        return;
+      }
+      setIsUploading(true);
 
-            try {
-                const res = await edgestore.publicFiles.upload({
-                    file,
-                    options: replaceUrl ? {replaceTargetUrl: replaceUrl} : undefined
-                })
+      try {
+        const res = await edgestore.publicFiles.upload({
+          file,
+          options: replaceUrl ? { replaceTargetUrl: replaceUrl } : undefined,
+        });
 
-                if (isMounted && res.url) {
-                    setUploadedCover(res.url);
-                }
-            } catch (e) {
-                console.error('Upload failed', e)
-            } finally {
-                if (isMounted) {
-                    setIsUploading(false);
-                }
-                setIsUploading(false);
-            }
+        if (isMounted && res.url) {
+          setUploadedCover(res.url);
         }
-
-        uplodadFile();
-
-        return () => {
-            isMounted = false;
+      } catch (e) {
+        console.error('Upload failed', e);
+      } finally {
+        if (isMounted) {
+          setIsUploading(false);
         }
-    }, [file, edgestore, replaceUrl, setUploadedCover])
+        setIsUploading(false);
+      }
+    };
 
-    return (<div>
-        <input
-            type="file"
-            accept="image/*"
-            ref={imgRef}
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="hidden"
-        />
-        <button type="button" onClick={handleUpload} className="flex items-center gap-2">
-            <ImageIcon size={20}/>
-            <span>
-                {!!replaceUrl ? "Replace Cover" : "Add Cover"}
-            </span>
-        </button>
-        {isUploading && <p className="text-green-500">Uploading</p>}
-    </div>)
-}
+    uplodadFile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [file, edgestore, replaceUrl, setUploadedCover]);
+
+  return (
+    <div>
+      <input
+        type="file"
+        accept="image/*"
+        ref={imgRef}
+        onChange={(e) => setFile(e.target.files?.[0] || null)}
+        className="hidden"
+      />
+      <button type="button" onClick={handleUpload} className="flex items-center gap-2">
+        <ImageIcon size={20} />
+        <span>{!!replaceUrl ? 'Replace Cover' : 'Add Cover'}</span>
+      </button>
+      {isUploading && <p className="text-green-500">Uploading</p>}
+    </div>
+  );
+};
 
 export default AddCover;

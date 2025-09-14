@@ -1,53 +1,51 @@
-'use server'
+'use server';
 
-import {getUserByEmail} from "@/lib/user";
-import {LoginSchema, LoginSchemaType} from "@/schemas/login-schema";
-import {signIn} from "@/auth";
-import {LOGIN_REDIRECT} from "@/routes";
-import {AuthError} from "next-auth";
-import {generateVerificationToken, sendEmailVerificationToken} from "@/lib/email-verification";
+import { signIn } from '@/auth';
+import { generateVerificationToken, sendEmailVerificationToken } from '@/lib/email-verification';
+import { getUserByEmail } from '@/lib/user';
+import { LOGIN_REDIRECT } from '@/routes';
+import { LoginSchema, LoginSchemaType } from '@/schemas/login-schema';
+import { AuthError } from 'next-auth';
 
 export const login = async (data: LoginSchemaType) => {
-    const validateFields = LoginSchema.safeParse(data);
+  const validateFields = LoginSchema.safeParse(data);
 
-    if (!validateFields.success) {
-        return {error: "Invalid fields!"}
+  if (!validateFields.success) {
+    return { error: 'Invalid fields!' };
+  }
+
+  const { password, email } = validateFields.data;
+
+  const user = await getUserByEmail(email);
+
+  if (!user || !email || !password || !user.password) {
+    return { error: 'Invalid credentials!' };
+  }
+
+  if (!user.emailVerified) {
+    const emailVerificationToken = await generateVerificationToken(email);
+
+    const result = await sendEmailVerificationToken(email, emailVerificationToken.token);
+
+    if (result.error) {
+      return { error: 'Something went wrong while sending the email verification token!' };
     }
 
-    const {password, email} = validateFields.data;
+    return { success: 'Verification email sent!' };
+  }
 
-    const user = await getUserByEmail(email);
-
-    if (!user || !email || !password || !user.password) {
-        return {error: "Invalid credentials!"}
+  try {
+    await signIn('credentials', { email, password, redirectTo: LOGIN_REDIRECT });
+  } catch (e) {
+    if (e instanceof AuthError) {
+      switch (e.type) {
+        case 'CredentialsSignin':
+          return { error: 'Invalid credentials!' };
+        default:
+          return { error: 'Something went wrong!' };
+      }
     }
+  }
 
-    if (!user.emailVerified) {
-        const emailVerificationToken = await generateVerificationToken(email);
-
-        const result = await sendEmailVerificationToken(email, emailVerificationToken.token);
-
-        if (result.error) {
-            return {error: "Something went wrong while sending the email verification token!"}
-        }
-
-
-        return {success: "Verification email sent!"}
-    }
-
-    try {
-        await signIn('credentials', {email, password, redirectTo: LOGIN_REDIRECT})
-    } catch (e) {
-        if (e instanceof AuthError) {
-            switch (e.type) {
-                case 'CredentialsSignin':
-                    return {error: "Invalid credentials!"}
-                default:
-                    return {error: "Something went wrong!"}
-            }
-        }
-    }
-
-
-    return {success: "User created successfully!"}
-}
+  return { success: 'User created successfully!' };
+};

@@ -1,10 +1,12 @@
-import Container from "@/components/layout/container";
-import ForgotPasswordForm from "@/components/auth/forgot-password-form";
+import ForgotPasswordForm from '@/components/auth/forgot-password-form';
+import Container from '@/components/layout/container';
 
 const ForgotPasswordPage = () => {
-    return (<Container>
-        <ForgotPasswordForm/>
-    </Container>)
-}
+  return (
+    <Container>
+      <ForgotPasswordForm />
+    </Container>
+  );
+};
 
 export default ForgotPasswordPage;

@@ -1,10 +1,12 @@
-import Container from "@/components/layout/container";
-import EmailVerificationClient from "@/components/auth/email-verification-client";
+import EmailVerificationClient from '@/components/auth/email-verification-client';
+import Container from '@/components/layout/container';
 
 const EmailVerificationPage = () => {
-    return (<Container>
-        <EmailVerificationClient/>
-    </Container>)
-}
+  return (
+    <Container>
+      <EmailVerificationClient />
+    </Container>
+  );
+};
 
 export default EmailVerificationPage;

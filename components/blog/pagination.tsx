@@ -1,32 +1,34 @@
-'use client'
+'use client';
 
-import {Blog, User} from '@prisma/client';
-import Link from "next/link";
-import {useSearchParams} from "next/navigation";
-import queryString from "query-string";
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import queryString from 'query-string';
 
 interface ListBlogsProps {
-    hasMore: boolean;
-    currentPage: number;
+  hasMore: boolean;
+  currentPage: number;
 }
 
-const Pagination = ({hasMore, currentPage}: ListBlogsProps) => {
+const Pagination = ({ hasMore, currentPage }: ListBlogsProps) => {
+  const params = useSearchParams();
+  const currentQuery = queryString.parse(params.toString());
 
-    const params = useSearchParams();
-    const currentQuery = queryString.parse(params.toString());
+  const searchParams = queryString.stringify({ url: '', query: currentQuery.query });
 
-    const searchParams = queryString.stringify({ url: '', query: currentQuery.query})
+  return (
+    <div className="flex justify-between mt-4">
+      {currentPage > 1 && (
+        <Link href={`/blog/feed/${currentPage - 1}`}>
+          <span>Previous</span>
+        </Link>
+      )}
+      {hasMore && (
+        <Link href={`/blog/feed/${currentPage + 1}`}>
+          <span>Next</span>
+        </Link>
+      )}
+    </div>
+  );
+};
 
-    return (
-        <div className="flex justify-between mt-4">
-            {currentPage > 1 && <Link href={`/blog/feed/${currentPage - 1}`}>
-                <span>Previous</span>
-            </Link>}
-            {hasMore && <Link href={`/blog/feed/${currentPage + 1}`}>
-                <span>Next</span>
-            </Link>}
-        </div>
-    )
-}
-
-export default Pagination
+export default Pagination;

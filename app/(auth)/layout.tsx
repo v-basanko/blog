@@ -1,15 +1,12 @@
-import React from "react";
-import type {Metadata} from "next";
+import type { Metadata } from 'next';
+import React from 'react';
 
 export const metadata: Metadata = {
-    title: "Authentication",
+  title: 'Authentication',
 };
 
-
-const AuthLayout = ({children}: Readonly<{ children: React.ReactNode }>) => {
-    return (<div>
-        {children}
-    </div>)
-}
+const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
+  return <div>{children}</div>;
+};
 
 export default AuthLayout;

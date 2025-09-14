@@ -1,0 +1,11 @@
+.next
+out
+dist
+build
+coverage
+node_modules
+.tmp
+*.min.js
+public/**/*.min.*
+**/__generated__/**
+**/__snapshots__/**
