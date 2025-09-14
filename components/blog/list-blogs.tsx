@@ -25,13 +25,13 @@ interface ListBlogsProps {
 
 const ListBlogs = ({ blogs, hasMore, currentPage, isUserProfile }: ListBlogsProps) => {
   return (
-    <div className="flex flex-col max-w-[800px] m-auto justify-between min-h-[85vh] px-4 pt-2">
+    <div className="flex flex-col max-w-[800px] m-auto justify-start min-h-[85vh] px-4 pt-2">
       <section>
         {blogs.map((blog) => {
           return <BlogCard key={blog.id} blog={blog} isUserProfile={isUserProfile || false} />;
         })}
       </section>
-      <Pagination hasMore={hasMore} currentPage={currentPage} />
+      <Pagination hasMore={hasMore} currentPage={currentPage} isUserProfile={isUserProfile} />
     </div>
   );
 };

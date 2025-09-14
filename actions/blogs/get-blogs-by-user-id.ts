@@ -1,24 +1,15 @@
 'use server';
 
-import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
-export type GetPublishedBlogsParams = {
+export type GetBlogsByUserIdParams = {
   page: number;
   limit: number;
-  searchObj: { tag: string; title: string };
+  userId: string;
 };
 
-export const getPublishedBlogs = async ({
-  page = 1,
-  limit = 5,
-  searchObj,
-}: GetPublishedBlogsParams) => {
+export const getBlogsByUserId = async ({ page = 1, limit = 5, userId }: GetBlogsByUserIdParams) => {
   const skip = (page - 1) * limit;
-  const { tag, title } = searchObj;
-
-  const session = await auth();
-  const userId = session?.user?.userId;
 
   try {
     const blogs = await db.blog.findMany({
@@ -28,12 +19,7 @@ export const getPublishedBlogs = async ({
         createdAt: 'desc',
       },
       where: {
-        title: {
-          contains: title,
-          mode: 'insensitive',
-        },
-        isPublished: true,
-        ...(tag ? { tags: { has: tag } } : {}),
+        userId,
       },
       include: {
         user: {
@@ -70,12 +56,7 @@ export const getPublishedBlogs = async ({
 
     const totalBlogsCount = await db.blog.count({
       where: {
-        title: {
-          contains: title,
-          mode: 'insensitive',
-        },
-        isPublished: true,
-        ...(tag ? { tags: { has: tag } } : {}),
+        userId,
       },
     });
 

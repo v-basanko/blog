@@ -4,7 +4,9 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { Blog, Bookmark } from '@prisma/client';
 
-export const getBookmarks = async ({ page = 1, limit = 5 }: { page: number; limit: number }) => {
+type GetBookmarksParams = { page: number; limit: number };
+
+export const getBookmarks = async ({ page = 1, limit = 5 }: GetBookmarksParams) => {
   const skip = (page - 1) * limit;
 
   const session = await auth();

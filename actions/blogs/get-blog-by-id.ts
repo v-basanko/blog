@@ -3,7 +3,11 @@
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
-export const getBlogById = async ({ blogId }: { blogId: string }) => {
+type GetBlogByIdProps = {
+  blogId: string;
+};
+
+export const getBlogById = async ({ blogId }: GetBlogByIdProps) => {
   if (!blogId) {
     return { error: 'Blog id is required' };
   }
