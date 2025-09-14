@@ -7,6 +7,7 @@ import {ThemeProvider} from "next-themes";
 import {SessionProvider} from "next-auth/react";
 import {auth} from "@/auth";
 import {EdgeStoreProvider} from "@/lib/edgestore";
+import { Toaster } from 'react-hot-toast';
 
 const popins = Poppins({
     variable: "--font-poppins",
@@ -48,6 +49,15 @@ export default async function RootLayout({
                 <body
                     className={cn('antialiased flex flex-col min-h-screen text-black bg-white dark:bg-black dark:text-white', popins.variable)}
                 >
+                <Toaster
+                    position="bottom-center"
+                    toastOptions={{
+                        style: {
+                            background: 'rgb(51 65 85)',
+                            color: '#fff',
+                        },
+                    }}
+                />
                 <ThemeProvider attribute="data-theme" defaultTheme="system" enableSystem disableTransitionOnChange>
                     <NavBar/>
                     <main className="flex-grow">{children}</main>

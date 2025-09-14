@@ -1,4 +1,4 @@
-'use client'
+'use server'
 
 import Image from "next/image";
 import UserSummary from "@/components/blog/user-summary";
@@ -6,9 +6,9 @@ import Link from "next/link";
 import {Separator} from "@/components/ui/separator";
 import Reactions from "@/components/blog/reactions";
 import Tag from "@/components/common/tag";
-import BlockNoteEditor from "@/components/blog/editor/block-note-editor";
 import {BlogWithUser} from "@/components/blog/list-blogs";
 import {DynamicBlockNoteEditor} from "@/components/blog/editor/dynamic-block-note-editor";
+import Comments from "@/components/comments/comments";
 
 interface BlogContentProps {
     blog: BlogWithUser;
@@ -39,6 +39,8 @@ const BlogContent = ({ blog, canEdit, createdAt }: BlogContentProps) => {
         <div>
             <DynamicBlockNoteEditor editable={false} initialContent={blog.content}/>
         </div>
+        <Separator/>
+        <Comments blog={blog}/>
     </div>)
 }
 

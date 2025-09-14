@@ -49,7 +49,7 @@ const Reactions = ({ blog }: { blog: BlogWithUser}) => {
             </span>
             <span className="mr-4 flex items-center gap-1 cursor-pointer">
                 <FaRegComment size={20}/>
-                {3}
+                {blog._count.comments}
             </span>
         </div>
         <div>

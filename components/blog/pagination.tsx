@@ -5,10 +5,6 @@ import Link from "next/link";
 import {useSearchParams} from "next/navigation";
 import queryString from "query-string";
 
-export type BlogWithUser = Blog & {
-    user: Pick<User, 'id' | 'name' | 'image'>;
-};
-
 interface ListBlogsProps {
     hasMore: boolean;
     currentPage: number;

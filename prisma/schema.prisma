@@ -15,12 +15,16 @@ model User {
   emailVerified DateTime?
   image         String?
   accounts      Account[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
   role          UserRole  @default(USER)
   blogs Blog[]
   claps Clap[]
+  commentClaps CommentClap[]
   bookmarks Bookmark[]
+  comments Comment[]
+  repliedToComments Comment[] @relation("ReplyToUser")
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Account {
@@ -79,6 +83,7 @@ model Blog {
   updatedAt DateTime @updatedAt
   claps Clap[]
   bookmarks Bookmark[]
+  comments Comment[]
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -107,4 +112,36 @@ model Bookmark {
   blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
 
   @@unique([userId, blogId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  userId    String
+  blogId    String
+  parentId  String?
+  repliedToUserId String?
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+  parent Comment? @relation("OneLevelThread", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Comment[] @relation("OneLevelThread")
+  repliedToUser User? @relation("ReplyToUser", fields: [repliedToUserId], references: [id], onDelete: Cascade)
+
+  claps CommentClap[]
+}
+
+model CommentClap {
+  id        String   @id @default(cuid())
+  userId    String
+  commentId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, commentId])
 }

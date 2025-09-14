@@ -27,6 +27,7 @@ export const getBlogById = async ({blogId}: { blogId: string }) => {
                 _count: {
                     select: {
                         claps: true,
+                        comments: true,
                     }
                 },
                 claps: {

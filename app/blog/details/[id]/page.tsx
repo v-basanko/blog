@@ -1,3 +1,5 @@
+'use server'
+
 import {getBlogById} from "@/actions/blogs/get-blog-by-id";
 import Alert from "@/components/common/alert";
 import {auth} from "@/auth";
@@ -26,8 +28,10 @@ const BlogContentPage = async ({params}: BlogContentPageProps) => {
         return <Alert error message="Blog not found"/>
     }
 
-    return <Container><BlogContent blog={blog} canEdit={session?.user.userId === blog.userId}
-                                   createdAt={blog.createdAt}/></Container>
+    return <Container>
+        <BlogContent blog={blog} canEdit={session?.user.userId === blog.userId}
+                                   createdAt={blog.createdAt}/>
+    </Container>
 }
 
 

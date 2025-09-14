@@ -2,6 +2,7 @@
 
 import {db} from "@/lib/db";
 import {auth} from "@/auth";
+import {Blog, Bookmark} from "@prisma/client";
 
 export const getBookmarks = async ({page = 1, limit = 5}: {
     page: number,
@@ -39,6 +40,7 @@ export const getBookmarks = async ({page = 1, limit = 5}: {
                         _count: {
                             select: {
                                 claps: true,
+                                comments: true,
                             }
                         },
                         claps: {
@@ -63,8 +65,8 @@ export const getBookmarks = async ({page = 1, limit = 5}: {
         });
 
         const blogs = bookmarks
-            .filter((bookmark) => bookmark.blog !== null)
-            .map((bookmark) => bookmark.blog);
+            .filter((bookmark: Bookmark & { blog: Blog }) => bookmark.blog !== null)
+            .map((bookmark: Bookmark & { blog: Blog }) => bookmark.blog);
 
         const totalBookmarksCount = await db.bookmark.count({
             where: {
