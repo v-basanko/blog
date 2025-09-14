@@ -1,6 +1,5 @@
 'use server';
 
-import { getBlogById } from '@/actions/blogs/get-blog-by-id';
 import { db } from '@/lib/db';
 import { getUserById } from '@/lib/user';
 import { CommentSchema, CommentSchemaType } from '@/schemas/comment-schema';
@@ -39,7 +38,7 @@ export const addComment = async ({
     };
   }
 
-  const blog = await getBlogById({ blogId });
+  const blog = await db.blog.findUnique({ where: { id: blogId } });
 
   if (!blog) {
     return {

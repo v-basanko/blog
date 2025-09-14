@@ -1,6 +1,9 @@
 # Next.js Blog (App Router) — Project Documentation
 
-A production‑ready blog application built with **Next.js 15 (App Router)**, **TypeScript**, **Prisma + PostgreSQL**, **Auth.js/NextAuth v5** (Google, GitHub, Credentials), **Resend** for transactional emails, **EdgeStore** for file uploads, and a **BlockNote** rich‑text editor. Includes comments, claps (likes), bookmarks, tags, email verification, and password reset.
+A production‑ready blog application built with **Next.js 15 (App Router)**, **TypeScript**,
+**Prisma + PostgreSQL**, **Auth.js/NextAuth v5** (Google, GitHub, Credentials), **Resend** for
+transactional emails, **EdgeStore** for file uploads, and a **BlockNote** rich‑text editor. Includes
+comments, claps (likes), bookmarks, tags, email verification, and password reset.
 
 ## Tech Stack
 
@@ -24,7 +27,6 @@ A production‑ready blog application built with **Next.js 15 (App Router)**, **
 - Protected routes via middleware, public feed and detail pages
 - Fully typed forms with validation via **Zod**
 
-
 ## Getting Started
 
 ### 1) Requirements
@@ -42,6 +44,7 @@ cp .env.example .env.local
 ```
 
 > **Notes**
+>
 > - `AUTH_SECRET` is **required in production** by Auth.js. Generate one: `npx auth secret`
 > - `BASE_URL` must be the **full origin** of your app (used in email links).
 > - When deploying behind a proxy (Vercel, Nginx, etc.) set `AUTH_TRUST_HOST=true`.
@@ -49,21 +52,22 @@ cp .env.example .env.local
 
 **Variables**
 
-| Name | Required | Example | Description |
-| --- | --- | --- | --- |
-| `DATABASE_URL` | ✅ | `postgresql://postgres:admin@localhost:5432/postgres?schema=public` | Prisma PostgreSQL connection string. |
-| `NODE_ENV` | ⛔ (auto) | `development` | Node environment. |
-| `BASE_URL` | ✅ | `http://localhost:3000` | Your app public base URL used in email links. |
-| `RESEND_API_KEY` | ✅ (for emails) | `re_************************` | Resend API key to send verification & reset emails. |
-| `GOOGLE_CLIENT_ID` | ✅ (if Google login) | `1234-abc.apps.googleusercontent.com` | Google OAuth client ID. |
-| `GOOGLE_CLIENT_SECRET` | ✅ (if Google login) | `xxxxxxxx` | Google OAuth client secret. |
-| `GITHUB_CLIENT_ID` | ✅ (if GitHub login) | `Iv1.abcdef` | GitHub OAuth client ID. |
-| `GITHUB_CLIENT_SECRET` | ✅ (if GitHub login) | `xxxxxxxx` | GitHub OAuth client secret. |
-| `AUTH_SECRET` | ✅ (prod) | `long-random-string` | Secret for Auth.js cookies/tokens (prod required). |
-| `AUTH_URL` / `NEXTAUTH_URL` | ✅ (prod) | `https://your-domain.com` | Canonical URL for auth callbacks. |
-| `AUTH_TRUST_HOST` | ➕ recommended | `true` | Trust proxy headers when app is behind a proxy/CDN. |
+| Name                        | Required             | Example                                                             | Description                                         |
+| --------------------------- | -------------------- | ------------------------------------------------------------------- | --------------------------------------------------- |
+| `DATABASE_URL`              | ✅                   | `postgresql://postgres:admin@localhost:5432/postgres?schema=public` | Prisma PostgreSQL connection string.                |
+| `NODE_ENV`                  | ⛔ (auto)            | `development`                                                       | Node environment.                                   |
+| `BASE_URL`                  | ✅                   | `http://localhost:3000`                                             | Your app public base URL used in email links.       |
+| `RESEND_API_KEY`            | ✅ (for emails)      | `re_************************`                                       | Resend API key to send verification & reset emails. |
+| `GOOGLE_CLIENT_ID`          | ✅ (if Google login) | `1234-abc.apps.googleusercontent.com`                               | Google OAuth client ID.                             |
+| `GOOGLE_CLIENT_SECRET`      | ✅ (if Google login) | `xxxxxxxx`                                                          | Google OAuth client secret.                         |
+| `GITHUB_CLIENT_ID`          | ✅ (if GitHub login) | `Iv1.abcdef`                                                        | GitHub OAuth client ID.                             |
+| `GITHUB_CLIENT_SECRET`      | ✅ (if GitHub login) | `xxxxxxxx`                                                          | GitHub OAuth client secret.                         |
+| `AUTH_SECRET`               | ✅ (prod)            | `long-random-string`                                                | Secret for Auth.js cookies/tokens (prod required).  |
+| `AUTH_URL` / `NEXTAUTH_URL` | ✅ (prod)            | `https://your-domain.com`                                           | Canonical URL for auth callbacks.                   |
+| `AUTH_TRUST_HOST`           | ➕ recommended       | `true`                                                              | Trust proxy headers when app is behind a proxy/CDN. |
 
-> The code references `GOOGLE_*`, `GITHUB_*`, `RESEND_API_KEY`, `BASE_URL`, `DATABASE_URL`, and reads `NODE_ENV`. `AUTH_*` / `NEXTAUTH_*` are required by the Auth.js runtime in production.
+> The code references `GOOGLE_*`, `GITHUB_*`, `RESEND_API_KEY`, `BASE_URL`, `DATABASE_URL`, and
+> reads `NODE_ENV`. `AUTH_*` / `NEXTAUTH_*` are required by the Auth.js runtime in production.
 
 ### 3) Database (Local via Docker)
 
@@ -108,7 +112,6 @@ pnpm start
 - `lint` — run ESLint
 - `format` — Prettier write with cache
 - `format:check` — Prettier check
-
 
 ## OAuth Setup (Google/GitHub)
 

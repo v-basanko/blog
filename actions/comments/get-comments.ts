@@ -1,7 +1,6 @@
 'use server';
 
 import { db } from '@/lib/db';
-import { getBlogById } from '../blogs/get-blog-by-id';
 
 type GetCommentsProps = {
   blogId: string;
@@ -10,7 +9,7 @@ type GetCommentsProps = {
 };
 
 const getComments = async ({ blogId, parentId, userId }: GetCommentsProps) => {
-  const blog = getBlogById({ blogId });
+  const blog = await db.blog.findUnique({ where: { id: blogId } });
 
   if (!blog) {
     return {

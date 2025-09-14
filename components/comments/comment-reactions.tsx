@@ -56,7 +56,7 @@ const CommentReactions = ({
 
   const handleDelete = async () => {
     if (userId) {
-      const res = await deleteComment(comment.id, userId);
+      const res = await deleteComment(comment.id);
 
       if (res.success) {
         toast.success(res.success);

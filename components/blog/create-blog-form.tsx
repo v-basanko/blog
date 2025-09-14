@@ -1,6 +1,7 @@
 'use client';
 
 import { createBlog } from '@/actions/blogs/create-blog';
+import { deleteBlog } from '@/actions/blogs/delete-blog';
 import { editBlog } from '@/actions/blogs/edit-blog';
 import AddCover from '@/components/blog/add-cover';
 import CoverImage from '@/components/blog/cover-image';
@@ -8,11 +9,13 @@ import { DynamicBlockNoteEditor } from '@/components/blog/editor/dynamic-block-n
 import Alert from '@/components/common/alert';
 import Button from '@/components/common/button';
 import FormField from '@/components/common/form-field';
+import { useEdgeStore } from '@/lib/edgestore';
 import { tags } from '@/lib/tags';
 import { BlogSchema, BlogSchemaType } from '@/schemas/blog-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Blog } from '@prisma/client';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -25,6 +28,10 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
   const [error, setError] = useState<string | undefined>();
   const [isPublishing, startPublishTransition] = useTransition();
   const [isSaving, startSaveDraftTransition] = useTransition();
+  const [isDeleting, startDeleting] = useTransition();
+  const { edgestore } = useEdgeStore();
+
+  const router = useRouter();
 
   const {
     register,
@@ -113,6 +120,30 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
     });
   };
 
+  const onDelete: SubmitHandler<BlogSchemaType> = (data) => {
+    setSuccess('');
+    setError('');
+
+    startDeleting(async () => {
+      if (blog) {
+        const coverImage = blog.coverImage;
+
+        deleteBlog(blog.id).then((res) => {
+          if (res.error) {
+            setError(res.error);
+          }
+          if (res.success) {
+            if (coverImage) {
+              edgestore.publicFiles.delete({ url: coverImage });
+            }
+            setSuccess(res.success);
+            router.push(`/blog/feed/1`);
+          }
+        });
+      }
+    });
+  };
+
   const onPublish: SubmitHandler<BlogSchemaType> = (data) => {
     return save(data, true);
   };
@@ -174,9 +205,15 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
         {success && <Alert message={success} success />}
         {error && <Alert message={error} error />}
         <div className="flex items-center justify-between gap-6">
-          <div>
-            <Button type="button" label="Delete" />
-          </div>
+          {blog && (
+            <div>
+              <Button
+                onClick={handleSubmit(onDelete)}
+                type="button"
+                label={isDeleting ? 'Deleting...' : 'Delete'}
+              />
+            </div>
+          )}
           <div className="flex gap-4">
             <Button
               type="submit"
