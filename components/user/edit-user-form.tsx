@@ -1,5 +1,6 @@
 'use client';
 
+import { deleteUser } from '@/actions/users/delete-user';
 import { editUser } from '@/actions/users/edit-user';
 import Alert from '@/components/common/alert';
 import Button from '@/components/common/button';
@@ -9,6 +10,7 @@ import { tags } from '@/lib/tags';
 import { EditProfileSchema, EditProfileSchemaType } from '@/schemas/edit-profile-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { User } from '@prisma/client';
+import { signOut } from 'next-auth/react';
 import { useState, useTransition } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
@@ -19,8 +21,11 @@ type EditUserFormProps = {
 
 const EditUserForm = ({ user, isCredentials }: EditUserFormProps) => {
   const [isPending, startTransition] = useTransition();
+  const [isDeleting, startDeleting] = useTransition();
   const [error, setError] = useState<string | undefined>();
+  const [deleteError, setDeleteError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
+  const [deleteSuccess, setDeleteSuccess] = useState<string | undefined>();
 
   const {
     register,
@@ -50,61 +55,93 @@ const EditUserForm = ({ user, isCredentials }: EditUserFormProps) => {
     });
   };
 
+  const onDelete = () => {
+    setDeleteSuccess('');
+    setDeleteError('');
+    startDeleting(() => {
+      deleteUser(user.id).then((res) => {
+        setDeleteError(res.error);
+        setDeleteSuccess(res.success);
+        if (res.success) {
+          setTimeout(async () => {
+            await signOut();
+          }, 5000);
+        }
+      });
+    });
+  };
+
   return (
-    <form
-      className="flex flex-col max-w-[500px] m-auto mt-8 gap-2"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <Heading title="Update Profile" lg center />
-      <FormField
-        id="name"
-        type="text"
-        register={register}
-        placeholder="Name"
-        errors={errors}
-        disabled={isPending}
-        label="Name"
-      />
-      {isCredentials && (
+    <>
+      <form
+        className="flex flex-col max-w-[500px] m-auto mt-8 gap-2"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <Heading title="Update Profile" lg center />
         <FormField
-          id="email"
+          id="name"
           type="text"
           register={register}
-          placeholder="Email"
+          placeholder="Name"
           errors={errors}
-          disabled={isPending || !isCredentials}
+          disabled={isPending}
+          label="Name"
         />
-      )}
-      <FormField
-        id="bio"
-        type="text"
-        register={register}
-        placeholder="Bio"
-        errors={errors}
-        disabled={isPending}
-        label="Bio"
-      />
-      <fieldset className="flex flex-col">
-        <legend className="mb-2 pr-2">Select tags</legend>
-        <div className="flex gap-4 flex-wrap w-full">
-          {tags.map((tag) => {
-            if (tag === 'All') {
-              return null;
-            }
-            return (
-              <label key={tag} className="flex items-center space-x-2">
-                <input type="checkbox" value={tag} {...register('tags')} disabled={false} />
-                <span>{tag}</span>
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
+        {isCredentials && (
+          <FormField
+            id="email"
+            type="text"
+            register={register}
+            placeholder="Email"
+            errors={errors}
+            disabled={isPending || !isCredentials}
+          />
+        )}
+        <FormField
+          id="bio"
+          type="text"
+          register={register}
+          placeholder="Bio"
+          errors={errors}
+          disabled={isPending}
+          label="Bio"
+        />
+        <fieldset className="flex flex-col">
+          <legend className="mb-2 pr-2">Select tags</legend>
+          <div className="flex gap-4 flex-wrap w-full">
+            {tags.map((tag) => {
+              if (tag === 'All') {
+                return null;
+              }
+              return (
+                <label key={tag} className="flex items-center space-x-2">
+                  <input type="checkbox" value={tag} {...register('tags')} disabled={false} />
+                  <span>{tag}</span>
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
 
-      {error && <Alert message={error} error />}
-      {success && <Alert message={success} success />}
-      <Button type="submit" label={isPending ? 'Saving' : 'Save changes'} disabled={isPending} />
-    </form>
+        {error && <Alert message={error} error />}
+        {success && <Alert message={success} success />}
+        <Button type="submit" label={isPending ? 'Saving' : 'Save changes'} disabled={isPending} />
+      </form>
+      <div className="max-w-[500px] m-auto mt-12">
+        <div className="text-rose-500">
+          <Heading title="DangerZone" lg />
+        </div>
+        {deleteError && <Alert message={deleteError} error />}
+        {deleteSuccess && <Alert message={deleteSuccess} success />}
+        <Button
+          label={isDeleting ? 'Deleting...' : 'Delete account'}
+          outlined
+          type="button"
+          className="mt-4"
+          onClick={() => onDelete()}
+        />
+      </div>
+    </>
   );
 };
 
