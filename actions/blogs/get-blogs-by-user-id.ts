@@ -1,12 +1,10 @@
 'use server';
 
 import { db } from '@/lib/db';
+import { PaginationParams } from '@/shared/types/pagination-params';
+import { ParamUserId } from '@/shared/types/param-user-id';
 
-export type GetBlogsByUserIdParams = {
-  page: number;
-  limit: number;
-  userId: string;
-};
+export type GetBlogsByUserIdParams = PaginationParams & ParamUserId;
 
 export const getBlogsByUserId = async ({ page = 1, limit = 5, userId }: GetBlogsByUserIdParams) => {
   const skip = (page - 1) * limit;

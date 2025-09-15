@@ -3,9 +3,10 @@ import ListBlogs from '@/components/blog/list-blogs';
 import Alert from '@/components/common/alert';
 import Heading from '@/components/common/heading';
 import Container from '@/components/layout/container';
+import { ParamPage } from '@/shared/types/param-page';
 
 interface BookmarksProps {
-  params: Promise<{ page: string }>;
+  params: Promise<ParamPage>;
 }
 
 const Bookmarks = async ({ params }: BookmarksProps) => {

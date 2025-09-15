@@ -1,8 +1,14 @@
 import Alert from '@/components/common/alert';
 import UserProfile from '@/components/user/user-profile';
 import { db } from '@/lib/db';
+import { ParamId } from '@/shared/types/param-id';
+import { ParamPage } from '@/shared/types/param-page';
 
-const ProfilePage = async ({ params }: { params: Promise<{ id: string; page: string }> }) => {
+export type ProfilePageProps = {
+  params: Promise<ParamId & ParamPage>;
+};
+
+const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { id, page } = await params;
 
   const user = await db.user.findUnique({

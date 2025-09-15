@@ -3,12 +3,8 @@
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 
-type GetBlogByIdProps = {
-  blogId: string;
-};
-
-export const getBlogById = async ({ blogId }: GetBlogByIdProps) => {
-  if (!blogId) {
+export const getBlogById = async (id: string) => {
+  if (!id) {
     return { error: 'Blog id is required' };
   }
 
@@ -18,7 +14,7 @@ export const getBlogById = async ({ blogId }: GetBlogByIdProps) => {
   try {
     const blog = await db.blog.findUnique({
       where: {
-        id: blogId,
+        id,
       },
       include: {
         user: {

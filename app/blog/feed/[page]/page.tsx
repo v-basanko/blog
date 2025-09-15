@@ -2,9 +2,10 @@ import { getPublishedBlogs } from '@/actions/blogs/get-published-blogs';
 import ListBlogs from '@/components/blog/list-blogs';
 import Alert from '@/components/common/alert';
 import Container from '@/components/layout/container';
+import { ParamPage } from '@/shared/types/param-page';
 
 interface BlogFeedProps {
-  params: Promise<{ page: string }>;
+  params: Promise<ParamPage>;
   searchParams: Promise<{
     tag: string;
     title: string;

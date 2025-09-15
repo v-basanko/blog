@@ -1,12 +1,19 @@
 import { getBlogsByUserId } from '@/actions/blogs/get-blogs-by-user-id';
 import ListBlogs from '@/components/blog/list-blogs';
 import Alert from '@/components/common/alert';
+import Tag from '@/components/common/tag';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import EditProfileButton from '@/components/user/edit-profile-button';
+import { ParamPage } from '@/shared/types/param-page';
 import { User } from '@prisma/client';
 import { Calendar, UserRound } from 'lucide-react';
 import moment from 'moment';
 
-const UserProfile = async ({ user, page }: { user: User; page: string }) => {
+type UserProfileProps = ParamPage & {
+  user: User;
+};
+
+const UserProfile = async ({ user, page }: UserProfileProps) => {
   const currentPage = parseInt(page) || 1;
   const { success, error } = await getBlogsByUserId({
     page: currentPage,
@@ -33,7 +40,9 @@ const UserProfile = async ({ user, page }: { user: User; page: string }) => {
             </div>
           </div>
         </div>
-        <div>Edit</div>
+        <div>
+          <EditProfileButton user={user} />
+        </div>
       </div>
       <div className="flex gap-4 flex-col items-center justify-center p-6 border-y mt-6 flex-wrap">
         <div className="flex items-center justify-center gap-6 flex-wrap">
@@ -48,7 +57,15 @@ const UserProfile = async ({ user, page }: { user: User; page: string }) => {
           <Calendar size={18} /> Member Since {moment(user.createdAt).format('MMMM Do YYYY')}
         </div>
       </div>
-      <div>Tags:</div>
+      <div>
+        {!!user.tags.length && (
+          <div className="flex items-center justify-center p-6 border-b mb-6 gap-4 flex-wrap">
+            {user.tags.map((tag: string) => (
+              <Tag key={tag}>{tag}</Tag>
+            ))}
+          </div>
+        )}
+      </div>
       <div>
         {error && <Alert error message="Error fetching user blogs" />}
         {success && (

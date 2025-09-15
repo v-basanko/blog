@@ -5,9 +5,10 @@ import { auth } from '@/auth';
 import BlogContent from '@/components/blog/blog-content';
 import Alert from '@/components/common/alert';
 import Container from '@/components/layout/container';
+import { ParamId } from '@/shared/types/param-id';
 
 interface BlogContentPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<ParamId>;
 }
 
 const BlogContentPage = async ({ params }: BlogContentPageProps) => {
@@ -15,7 +16,7 @@ const BlogContentPage = async ({ params }: BlogContentPageProps) => {
 
   const { id } = await params;
 
-  const res = await getBlogById({ blogId: id });
+  const res = await getBlogById(id);
 
   if (!res.success) {
     return <Alert error message="Blog not found" />;

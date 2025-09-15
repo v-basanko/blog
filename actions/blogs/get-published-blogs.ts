@@ -2,10 +2,9 @@
 
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
+import { PaginationParams } from '@/shared/types/pagination-params';
 
-export type GetPublishedBlogsParams = {
-  page: number;
-  limit: number;
+export type GetPublishedBlogsParams = PaginationParams & {
   searchObj: { tag: string; title: string };
 };
 

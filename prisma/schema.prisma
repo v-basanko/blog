@@ -15,6 +15,7 @@ model User {
   emailVerified DateTime?
   image         String?
   bio           String?
+  tags          String[]
   accounts      Account[]
   role          UserRole  @default(USER)
   blogs Blog[]
