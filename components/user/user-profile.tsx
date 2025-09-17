@@ -1,20 +1,28 @@
 import { getBlogsByUserId } from '@/actions/blogs/get-blogs-by-user-id';
+import { UserWithFollows } from '@/app/user/[id]/[page]/page';
+import { auth } from '@/auth';
 import ListBlogs from '@/components/blog/list-blogs';
 import Alert from '@/components/common/alert';
 import Tag from '@/components/common/tag';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import EditProfileButton from '@/components/user/edit-profile-button';
+import FollowButton from '@/components/user/follow-button';
+import FollowersList from '@/components/user/followers-list';
+import FollowingsList from '@/components/user/followings-list';
 import { ParamPage } from '@/shared/types/param-page';
-import { User } from '@prisma/client';
 import { Calendar, UserRound } from 'lucide-react';
 import moment from 'moment';
 
 type UserProfileProps = ParamPage & {
-  user: User;
+  user: UserWithFollows;
+  isFollowing: boolean;
 };
 
-const UserProfile = async ({ user, page }: UserProfileProps) => {
-  const currentPage = parseInt(page) || 1;
+const UserProfile = async ({ user, page, isFollowing }: UserProfileProps) => {
+  const currentPage = parseInt(page, 10) || 1;
+  const session = await auth();
+  const userId = session?.user?.userId;
+
   const { success, error } = await getBlogsByUserId({
     page: currentPage,
     limit: 5,
@@ -35,13 +43,14 @@ const UserProfile = async ({ user, page }: UserProfileProps) => {
             <h1 className="text-xl sm:text-3x1 font-bold">{user.name}</h1>
             {user.bio && <p>{user.bio}</p>}
             <div className="flex items-center gap-4">
-              <span>Followers</span>
-              <span>Following</span>
+              <FollowersList user={user} />
+              <FollowingsList user={user} />
             </div>
           </div>
         </div>
         <div>
-          <EditProfileButton user={user} />
+          {userId === user.id && <EditProfileButton user={user} />}
+          {userId !== user.id && <FollowButton user={user} isFollowing={isFollowing} />}
         </div>
       </div>
       <div className="flex gap-4 flex-col items-center justify-center p-6 border-y mt-6 flex-wrap">

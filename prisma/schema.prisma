@@ -20,6 +20,8 @@ model User {
   role          UserRole  @default(USER)
   blogs Blog[]
   claps Clap[]
+  followers Follow[] @relation("Following")
+  followings Follow[] @relation("Follower")
   commentClaps CommentClap[]
   bookmarks Bookmark[]
   comments Comment[]
@@ -48,6 +50,18 @@ model Account {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
+}
+
+model Follow {
+  id         String   @id @default(cuid())
+  followerId String
+  followingId String
+  createdAt  DateTime @default(now())
+
+  follower User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
 }
 
 model EmailVerificationToken {
