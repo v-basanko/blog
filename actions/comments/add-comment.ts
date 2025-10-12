@@ -1,5 +1,6 @@
 'use server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getUserById } from '@/lib/user';
 import { CommentSchema, CommentSchemaType } from '@/schemas/comment-schema';
@@ -7,7 +8,6 @@ import { revalidatePath } from 'next/cache';
 
 type AddCommentParams = {
   values: CommentSchemaType;
-  userId: string;
   blogId: string;
   repliedToUserId?: string;
   parentId?: string;
@@ -15,11 +15,14 @@ type AddCommentParams = {
 
 export const addComment = async ({
   values,
-  userId,
   blogId,
   repliedToUserId,
   parentId,
 }: AddCommentParams) => {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) return { error: 'Unauthorized' };
+
   const vFields = CommentSchema.safeParse(values);
 
   if (!vFields.success) {

@@ -1,9 +1,14 @@
 'use server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getUserById } from '@/lib/user';
 
-export const bookmarkBlog = async (blogId: string, userId: string) => {
+export const bookmarkBlog = async (blogId: string) => {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) return { error: 'Unauthorized' };
+
   const blog = await db.blog.findUnique({
     where: {
       id: blogId,

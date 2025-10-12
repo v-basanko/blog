@@ -35,7 +35,7 @@ const SearchInput = () => {
       },
     );
     router.push(url);
-  }, [debounceValue]);
+  }, [debounceValue, params, router]);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);

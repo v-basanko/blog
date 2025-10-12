@@ -9,7 +9,7 @@ export const getBlogById = async (id: string) => {
   }
 
   const session = await auth();
-  const userId = session?.user?.id;
+  const userId = session?.user?.userId;
 
   try {
     const blog = await db.blog.findUnique({

@@ -19,7 +19,7 @@ const Comments = async ({ blog }: CommentsProps) => {
   return (
     <div>
       <Heading title="Comments" />
-      {userId && <AddCommentsForm blogId={blog.id} userId={userId} creatorId={blog.userId} />}
+      {userId && <AddCommentsForm blogId={blog.id} creatorId={blog.userId} />}
       {!!success?.comments.length && <ListComments comments={success.comments} />}
     </div>
   );

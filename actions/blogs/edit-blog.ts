@@ -1,17 +1,22 @@
 'use server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getUserById } from '@/lib/user';
 import { BlogSchema, BlogSchemaType } from '@/schemas/blog-schema';
 
 export const editBlog = async (data: BlogSchemaType, id: string) => {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) return { error: 'Unauthorized' };
+
   const validateFields = BlogSchema.safeParse(data);
 
   if (!validateFields.success) {
     return { error: 'Invalid blog data!' };
   }
 
-  const { userId, isPublished } = validateFields.data;
+  const { isPublished } = validateFields.data;
 
   const user = await getUserById(userId);
 

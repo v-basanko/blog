@@ -4,14 +4,13 @@ import { db } from './db';
 
 export const getVerificationTokenByEmail = async (email: string) => {
   try {
-    const verificationToken = await db.emailVerificationToken.findUnique({
+    return await db.emailVerificationToken.findFirst({
       where: {
         email,
       },
+      orderBy: { expires: 'desc' },
     });
-
-    return verificationToken;
-  } catch (e) {
+  } catch {
     return null;
   }
 };
@@ -29,15 +28,13 @@ export const generateVerificationToken = async (email: string) => {
     });
   }
 
-  const verificationToken = await db.emailVerificationToken.create({
+  return db.emailVerificationToken.create({
     data: {
       email,
       token,
       expires,
     },
   });
-
-  return verificationToken;
 };
 
 export const sendEmailVerificationToken = async (email: string, token: string) => {

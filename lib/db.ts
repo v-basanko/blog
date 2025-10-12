@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
 
-export const db = globalThis.prisma || new PrismaClient();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const db = (globalThis as any).prisma || new PrismaClient();
 
 if (process.env.NODE_ENV !== 'production') {
-  globalThis.prisma = db;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (globalThis as any).prisma = db;
 }

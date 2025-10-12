@@ -71,7 +71,7 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
       socket.off('disconnect', onDisconnect);
       socket.off('getNotifications', onNotification);
     };
-  }, [socket]);
+  }, [isSocketConnected, socket, user]);
 
   useEffect(() => {
     if (!socket || !isSocketConnected || !user) {

@@ -34,7 +34,6 @@ const CommentCard = ({ comment }: CommentCardProps) => {
           {showForm && userId && (
             <AddCommentsForm
               blogId={comment.blogId}
-              userId={userId}
               parentId={comment.id}
               repliedToId={comment.userId}
               placeholder="Add Reply"

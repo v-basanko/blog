@@ -1,9 +1,14 @@
 'use server';
 
+import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { getUserById } from '@/lib/user';
 
-export const clapComment = async (commentId: string, userId: string) => {
+export const clapComment = async (commentId: string) => {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) return { error: 'Unauthorized' };
+
   const comment = await db.comment.findUnique({
     where: {
       id: commentId,

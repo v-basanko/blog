@@ -26,6 +26,7 @@ app.prepare().then(() => {
           socketId: socket.id,
         });
       }
+      console.log(onlineUsers);
     });
 
     socket.on('onNotification', (recipientId) => {

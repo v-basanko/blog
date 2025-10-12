@@ -33,7 +33,6 @@ const ReplyCard = ({ reply }: ReplyCardProps) => {
           {showForm && userId && (
             <AddCommentsForm
               blogId={reply.blogId}
-              userId={userId}
               parentId={reply.parentId ? reply.parentId : undefined}
               repliedToId={reply.userId}
               placeholder="Add Reply"

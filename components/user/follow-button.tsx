@@ -18,6 +18,9 @@ type FollowButtonProps = {
   isList?: boolean;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unused-vars
+type FollowError = { response: { data: { error: string } } } | any;
+
 const FollowButton = ({
   user,
   isFollowing: isFollowingByDefault,
@@ -55,7 +58,7 @@ const FollowButton = ({
       }
 
       router.refresh();
-    } catch (ex: { response: { data: { error: string } } }) {
+    } catch (ex: FollowError) {
       if (ex && ex.response && ex.response.data && ex.response.data.error) {
         toast.error(ex.response.data.error);
       }

@@ -4,28 +4,26 @@ import { db } from './db';
 
 export const getResetPasswordTokenByEmail = async (email: string) => {
   try {
-    const resetPasswordToken = await db.resetPasswordToken.findUnique({
+    return await db.resetPasswordToken.findFirst({
       where: {
         email,
       },
+      orderBy: { expires: 'desc' },
     });
-
-    return resetPasswordToken;
-  } catch (e) {
+  } catch {
     return null;
   }
 };
 
 export const getResetPasswordTokenByToken = async (token: string) => {
   try {
-    const resetPasswordToken = await db.resetPasswordToken.findUnique({
+    return await db.resetPasswordToken.findFirst({
       where: {
         token,
       },
+      orderBy: { expires: 'desc' },
     });
-
-    return resetPasswordToken;
-  } catch (e) {
+  } catch {
     return null;
   }
 };

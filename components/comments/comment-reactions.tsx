@@ -34,13 +34,9 @@ const CommentReactions = ({
   const [userHasClapped, setUserHasClapped] = useState(!!comment.claps.length);
 
   const handleClap = async () => {
-    if (!userId) {
-      return;
-    }
-
     setClapCount((prevCount) => (userHasClapped ? prevCount - 1 : prevCount + 1));
     setUserHasClapped((prevState) => !prevState);
-    await clapComment(comment.id, userId);
+    await clapComment(comment.id);
     router.refresh();
   };
 

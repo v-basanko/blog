@@ -3,7 +3,6 @@
 import { bookmarkBlog } from '@/actions/blogs/bookmark-blog';
 import { clapBlog } from '@/actions/blogs/clap-blog';
 import { BlogWithUser } from '@/components/blog/list-blogs';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaBookmark, FaRegBookmark, FaRegComment } from 'react-icons/fa';
@@ -11,8 +10,6 @@ import { FaHandsClapping } from 'react-icons/fa6';
 import { PiHandsClapping } from 'react-icons/pi';
 
 const Reactions = ({ blog }: { blog: BlogWithUser }) => {
-  const session = useSession();
-  const userId = session.data?.user?.userId;
   const [clapCount, setClapCount] = useState(blog._count.claps);
   const [userHasClapped, setUserHasClapped] = useState(!!blog.claps.length);
   const [userHasBookmarked, setUserHasBookmarked] = useState(!!blog.bookmarks.length);
@@ -20,23 +17,15 @@ const Reactions = ({ blog }: { blog: BlogWithUser }) => {
   const router = useRouter();
 
   const handleClap = async () => {
-    if (!userId) {
-      return;
-    }
-
     setClapCount((prevCount) => (userHasClapped ? prevCount - 1 : prevCount + 1));
     setUserHasClapped((prevState) => !prevState);
-    await clapBlog(blog.id, userId);
+    await clapBlog(blog.id);
     router.refresh();
   };
 
   const handleBookmark = async () => {
-    if (!userId) {
-      return;
-    }
-
     setUserHasBookmarked((prevState) => !prevState);
-    await bookmarkBlog(blog.id, userId);
+    await bookmarkBlog(blog.id);
     router.refresh();
   };
 

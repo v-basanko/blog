@@ -26,7 +26,7 @@ const NavBar = () => {
       };
       updateSession();
     }
-  }, [isLoggedIn, path]);
+  }, [isLoggedIn, path, session]);
 
   return (
     <nav className="sticky top-o border-b z-50 ligth: bg-white dark:bg-slate-950">

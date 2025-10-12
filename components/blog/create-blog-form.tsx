@@ -14,14 +14,11 @@ import { tags } from '@/lib/tags';
 import { BlogSchema, BlogSchemaType } from '@/schemas/blog-schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Blog } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useTransition } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 
 const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
-  const session = useSession();
-  const userId = session.data?.user.userId;
   const [uploadedCover, setUploadedCover] = useState<string>();
   const [content, setContent] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
@@ -42,7 +39,6 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
     resolver: zodResolver(BlogSchema),
     defaultValues: blog
       ? {
-          userId: blog.userId,
           isPublished: blog.isPublished,
           title: blog.title,
           content: blog.content,
@@ -50,7 +46,6 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
           tags: blog.tags,
         }
       : {
-          userId,
           isPublished: false,
         },
   });
@@ -63,7 +58,7 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
         shouldTouch: true,
       });
     }
-  }, [uploadedCover]);
+  }, [setValue, uploadedCover]);
 
   useEffect(() => {
     if (typeof content === 'string') {
@@ -73,7 +68,7 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
         shouldTouch: true,
       });
     }
-  }, [content]);
+  }, [content, setValue]);
 
   useEffect(() => {
     if (blog?.coverImage) {
@@ -104,6 +99,9 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
 
           if (result.success) {
             setSuccess(result.success);
+            setTimeout(() => {
+              router.push('/blog/feed/1');
+            }, 2000);
           }
         });
       } else {
@@ -114,13 +112,16 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
 
           if (result.success) {
             setSuccess(result.success);
+            setTimeout(() => {
+              router.push('/blog/feed/1');
+            }, 2000);
           }
         });
       }
     });
   };
 
-  const onDelete: SubmitHandler<BlogSchemaType> = (data) => {
+  const onDelete: SubmitHandler<BlogSchemaType> = () => {
     setSuccess('');
     setError('');
 
@@ -199,9 +200,6 @@ const CreateBlogForm = ({ blog }: { blog?: Blog }) => {
         )}
       </div>
       <div className="border-t pt-2">
-        {errors.userId && errors.userId.message && (
-          <span className="text-rose-400 text-sm">Missing a userId</span>
-        )}
         {success && <Alert message={success} success />}
         {error && <Alert message={error} error />}
         <div className="flex items-center justify-between gap-6">

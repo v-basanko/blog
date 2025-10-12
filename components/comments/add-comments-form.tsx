@@ -14,7 +14,6 @@ import { toast } from 'react-hot-toast';
 
 type AddCommentsFormProps = {
   blogId: string;
-  userId: string;
   parentId?: string;
   repliedToId?: string;
   placeholder?: string;
@@ -23,7 +22,6 @@ type AddCommentsFormProps = {
 
 const AddCommentsForm = ({
   blogId,
-  userId,
   parentId,
   repliedToId,
   placeholder,
@@ -45,7 +43,6 @@ const AddCommentsForm = ({
     startTransition(() => {
       addComment({
         values: data,
-        userId,
         blogId,
         parentId,
         repliedToUserId: repliedToId,

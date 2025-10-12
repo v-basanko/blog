@@ -27,7 +27,7 @@ const ListReplies = ({ comment, userId }: ListRepliesProps) => {
         }
       });
     });
-  }, [comment]);
+  }, [comment, userId]);
 
   return (
     <div className="text-sm">
