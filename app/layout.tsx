@@ -1,5 +1,6 @@
 import { auth } from '@/auth';
 import NavBar from '@/components/layout/nav-bar';
+import { SocketContextProvider } from '@/context/socket-context';
 import { EdgeStoreProvider } from '@/lib/edgestore';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
@@ -40,38 +41,40 @@ export default async function RootLayout({
   return (
     <EdgeStoreProvider>
       <SessionProvider session={session}>
-        <html lang="en" suppressHydrationWarning>
-          <head>
-            <meta name="color-scheme" content="light dark" />
-            <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-          </head>
-          <body
-            className={cn(
-              'antialiased flex flex-col min-h-screen text-black bg-white dark:bg-black dark:text-white',
-              popins.variable,
-            )}
-          >
-            <Toaster
-              position="bottom-center"
-              toastOptions={{
-                style: {
-                  background: 'rgb(51 65 85)',
-                  color: '#fff',
-                },
-              }}
-            />
-            <ThemeProvider
-              attribute="data-theme"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
+        <SocketContextProvider>
+          <html lang="en" suppressHydrationWarning>
+            <head>
+              <meta name="color-scheme" content="light dark" />
+              <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+            </head>
+            <body
+              className={cn(
+                'antialiased flex flex-col min-h-screen text-black bg-white dark:bg-black dark:text-white',
+                popins.variable,
+              )}
             >
-              <NavBar />
-              <main className="flex-grow">{children}</main>
-              <footer>...</footer>
-            </ThemeProvider>
-          </body>
-        </html>
+              <Toaster
+                position="bottom-center"
+                toastOptions={{
+                  style: {
+                    background: 'rgb(51 65 85)',
+                    color: '#fff',
+                  },
+                }}
+              />
+              <ThemeProvider
+                attribute="data-theme"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <NavBar />
+                <main className="flex-grow">{children}</main>
+                <footer>...</footer>
+              </ThemeProvider>
+            </body>
+          </html>
+        </SocketContextProvider>
       </SessionProvider>
     </EdgeStoreProvider>
   );

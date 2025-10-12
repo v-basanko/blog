@@ -1,7 +1,11 @@
 'use client';
 
+import { createNotification } from '@/actions/notifications/create-notification';
 import Button from '@/components/common/button';
+import { useSocket } from '@/context/socket-context';
+import { EntityType } from '@/shared/enum/entity-type.enum';
 import { FollowedStatus } from '@/shared/enum/followed-status.enum';
+import { NotificationType } from '@/shared/enum/notification-type.enum';
 import { User } from '@prisma/client';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -21,6 +25,7 @@ const FollowButton = ({
 }: FollowButtonProps) => {
   const [isFollowing, setIsFollowing] = useState(isFollowingByDefault);
   const [loading, setLoading] = useState(false);
+  const { sendNotification } = useSocket();
   const router = useRouter();
 
   useEffect(() => {
@@ -36,6 +41,15 @@ const FollowButton = ({
 
       if (res.data.success === FollowedStatus.FOLLOWED) {
         setIsFollowing(true);
+        if (user.id) {
+          await createNotification({
+            recipientId: user.id,
+            type: NotificationType.FOLLOW,
+            entityType: EntityType.USER,
+          });
+
+          sendNotification(user.id);
+        }
       } else if (res.data.success === FollowedStatus.UNFOLLOWED) {
         setIsFollowing(false);
       }

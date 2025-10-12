@@ -1,9 +1,12 @@
 'use client';
 
 import { addComment } from '@/actions/comments/add-comment';
+import { createNotification } from '@/actions/notifications/create-notification';
 import Button from '@/components/common/button';
 import TextAreaField from '@/components/common/text-area';
+import { useSocket } from '@/context/socket-context';
 import { CommentSchema, CommentSchemaType } from '@/schemas/comment-schema';
+import { NotificationType } from '@/shared/enum/notification-type.enum';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTransition } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -27,6 +30,7 @@ const AddCommentsForm = ({
   creatorId,
 }: AddCommentsFormProps) => {
   const [isPending, startTransition] = useTransition();
+  const { sendNotification } = useSocket();
 
   const {
     register,
@@ -45,11 +49,35 @@ const AddCommentsForm = ({
         blogId,
         parentId,
         repliedToUserId: repliedToId,
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.error) {
           return toast.error(result.error);
         }
         if (result.success) {
+          if (repliedToId) {
+            await createNotification({
+              recipientId: repliedToId,
+              type: NotificationType.COMMENT_REPLY,
+              commentId: parentId,
+              entityType: 'COMMENT',
+              content: data.content,
+            });
+
+            sendNotification(repliedToId);
+          }
+
+          if (creatorId) {
+            await createNotification({
+              recipientId: creatorId,
+              type: NotificationType.NEW_COMMENT,
+              blogId,
+              entityType: 'BLOG',
+              content: data.content,
+            });
+
+            sendNotification(creatorId);
+          }
+
           toast.success(result.success);
           reset();
         }

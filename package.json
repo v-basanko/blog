@@ -2,13 +2,15 @@
   "name": "blog",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "next build --turbopack",
-    "dev": "next dev --turbopack",
+    "dev": "node server.js",
     "format": "prettier --cache --write .",
     "format:check": "prettier --check .",
     "lint": "eslint",
-    "start": "next start"
+    "nodemon": "nodemon server.js",
+    "start": "NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.10.0",
@@ -43,6 +45,8 @@
     "react-icons": "^5.5.0",
     "resend": "^6.0.2",
     "shadcn": "^3.0.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0",
     "zod": "^4.1.5"

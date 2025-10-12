@@ -1,0 +1,7 @@
+export enum NotificationType {
+  NEW_COMMENT = 'NEW_COMMENT',
+  COMMENT_REPLY = 'COMMENT_REPLY',
+  NEW_CLAP = 'NEW_CLAP',
+  FOLLOW = 'FOLLOW',
+  SYSTEM_ALERT = 'SYSTEM_ALERT',
+}
