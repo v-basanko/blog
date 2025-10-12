@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { UserRole } from '@/shared/enum/user-role.enum';
 import { DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu';
 import { LogOut, Pencil, Shield, User, UserRound } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
@@ -14,9 +15,8 @@ import { FaRegBookmark } from 'react-icons/fa';
 
 const UserButton = () => {
   const session = useSession();
-
+  const isAdmin = session.data?.user.role === UserRole.ADMIN;
   const router = useRouter();
-
   const imageUrl = session.data?.user?.image || '';
 
   return (
@@ -60,12 +60,20 @@ const UserButton = () => {
           </button>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <button className="flex items-center gap-2" type="button">
-            <Shield size={18} /> Admin
-          </button>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
+        {isAdmin && (
+          <>
+            <DropdownMenuItem>
+              <button
+                onClick={() => router.push('/admin')}
+                className="flex items-center gap-2"
+                type="button"
+              >
+                <Shield size={18} /> Admin
+              </button>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem>
           <button onClick={() => signOut()} className="flex items-center gap-2" type="button">
             <LogOut size={18} /> Sign Out
