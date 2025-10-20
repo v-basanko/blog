@@ -61,7 +61,7 @@ export const getBlogsByUserId = async ({ page = 1, limit = 5, userId }: GetBlogs
     const hasMore = page * limit < totalBlogsCount;
 
     return { success: { blogs, hasMore } };
-  } catch (e) {
+  } catch {
     return { error: 'Error fetching blogs!' };
   }
 };

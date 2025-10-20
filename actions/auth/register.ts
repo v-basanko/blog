@@ -21,7 +21,7 @@ export const register = async (data: RegisterSchemaType) => {
     return { error: 'User already exists!' };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 12);
 
   await db.user.create({
     data: {

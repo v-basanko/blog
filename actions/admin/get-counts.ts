@@ -16,7 +16,7 @@ export const getCounts = async () => {
     const [usersCount, blogsCount] = await Promise.all([db.user.count(), db.blog.count()]);
 
     return { success: { usersCount, blogsCount } };
-  } catch (error) {
+  } catch {
     return { error: 'Error fetching counts' };
   }
 };

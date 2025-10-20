@@ -42,19 +42,19 @@ cp .env.example .env.local
 
 **Variables**
 
-| Name                        | Required             | Example                                  | Description                                         |
-| --------------------------- | -------------------- | ---------------------------------------- | --------------------------------------------------- |
+| Name                        | Required             | Example                                                             | Description                                         |
+| --------------------------- | -------------------- | ------------------------------------------------------------------- | --------------------------------------------------- |
 | `DATABASE_URL`              | ✅                   | `postgresql://postgres:admin@localhost:5432/postgres?schema=public` | Prisma PostgreSQL connection string.                |
-| `NODE_ENV`                  | ⛔ (auto)            | `development` / `production`             | Node environment.                                   |
-| `BASE_URL`                  | ✅                   | `http://localhost:3000`                  | Your app public base URL used in email links.       |
-| `RESEND_API_KEY`            | ✅ (for emails)      | `re_************************`            | Resend API key to send verification & reset emails. |
-| `GOOGLE_CLIENT_ID`          | ✅ (if Google login) | `1234-abc.apps.googleusercontent.com`    | Google OAuth client ID.                             |
-| `GOOGLE_CLIENT_SECRET`      | ✅ (if Google login) | `********`                                | Google OAuth client secret.                         |
-| `GITHUB_CLIENT_ID`          | ✅ (if GitHub login) | `Iv1.********`                            | GitHub OAuth client ID.                             |
-| `GITHUB_CLIENT_SECRET`      | ✅ (if GitHub login) | `********`                                | GitHub OAuth client secret.                         |
-| `AUTH_URL` / `NEXTAUTH_URL` | ✅ (prod)            | `https://your-domain.com`                 | Public URL for Auth.js.                             |
-| `AUTH_SECRET`               | ✅ (prod)            | `long-random-string`                      | Secret used by Auth.js.                             |
-| `AUTH_TRUST_HOST`           | ✅ (behind proxy)    | `true`                                    | Trust proxy headers for callbacks/cookies.          |
+| `NODE_ENV`                  | ⛔ (auto)            | `development` / `production`                                        | Node environment.                                   |
+| `BASE_URL`                  | ✅                   | `http://localhost:3000`                                             | Your app public base URL used in email links.       |
+| `RESEND_API_KEY`            | ✅ (for emails)      | `re_************************`                                       | Resend API key to send verification & reset emails. |
+| `GOOGLE_CLIENT_ID`          | ✅ (if Google login) | `1234-abc.apps.googleusercontent.com`                               | Google OAuth client ID.                             |
+| `GOOGLE_CLIENT_SECRET`      | ✅ (if Google login) | `********`                                                          | Google OAuth client secret.                         |
+| `GITHUB_CLIENT_ID`          | ✅ (if GitHub login) | `Iv1.********`                                                      | GitHub OAuth client ID.                             |
+| `GITHUB_CLIENT_SECRET`      | ✅ (if GitHub login) | `********`                                                          | GitHub OAuth client secret.                         |
+| `AUTH_URL` / `NEXTAUTH_URL` | ✅ (prod)            | `https://your-domain.com`                                           | Public URL for Auth.js.                             |
+| `AUTH_SECRET`               | ✅ (prod)            | `long-random-string`                                                | Secret used by Auth.js.                             |
+| `AUTH_TRUST_HOST`           | ✅ (behind proxy)    | `true`                                                              | Trust proxy headers for callbacks/cookies.          |
 
 ### 3) Database (Local via Docker)
 
@@ -84,6 +84,7 @@ pnpm dev
 ```
 
 By default, `server.js` listens on `PORT` (defaults to **3001**). The app will be available at:
+
 - `http://localhost:3001` (Next.js)
 - `ws(s)://localhost:3001/socket.io` (Socket.io path)
 
@@ -93,7 +94,8 @@ If you prefer port **3000**, set `PORT=3000` in `.env.local`.
 
 ## Realtime (Socket.io)
 
-This project includes a Socket.io server integrated into `server.js`. It runs in the same Node process as Next.js and exposes the WebSocket endpoint at **`/socket.io`**.
+This project includes a Socket.io server integrated into `server.js`. It runs in the same Node
+process as Next.js and exposes the WebSocket endpoint at **`/socket.io`**.
 
 ### Environment variables
 
@@ -110,19 +112,22 @@ AUTH_TRUST_HOST=true                    # Behind proxies / Vercel / nginx
 ```
 
 - **CORS**: Only origins listed in `ALLOWED_ORIGIN` can connect. Do **not** use `*` in production.
-- **Auth**: The server tries to identify the user from `handshake.auth.token` (custom JWT with `{ userId }`) or from next-auth cookies (if `ACCEPT_UNVERIFIED_NEXTAUTH_JWT=true` in DEV). If `SOCKET_REQUIRE_AUTH=true`, unauthenticated connections are rejected.
+- **Auth**: The server tries to identify the user from `handshake.auth.token` (custom JWT with
+  `{ userId }`) or from next-auth cookies (if `ACCEPT_UNVERIFIED_NEXTAUTH_JWT=true` in DEV). If
+  `SOCKET_REQUIRE_AUTH=true`, unauthenticated connections are rejected.
 
 ### Events (legacy names preserved)
 
-- `addOnlineUser` (**client → server**) — optional ping after connect. **Args are ignored**; the server trusts only its own user identification.
+- `addOnlineUser` (**client → server**) — optional ping after connect. **Args are ignored**; the
+  server trusts only its own user identification.
 - `onlineUsers` (**server → clients**) — broadcasts an array of `userId` that are currently online.
 - `onNotification` (**bidirectional**) — send/receive notifications.
-    - Client → server payload: `{ toUserId?: string, ...any }`
-    - If `toUserId` is online, the server emits `onNotification` only to that user; otherwise it broadcasts to all.
-    - Basic rate limiting: max ~2 events/second per socket.
+  - Client → server payload: `{ toUserId?: string, ...any }`
+  - If `toUserId` is online, the server emits `onNotification` only to that user; otherwise it
+    broadcasts to all.
+  - Basic rate limiting: max ~2 events/second per socket.
 
 **Socket path:** `/socket.io`
-
 
 ## Auth (NextAuth v5)
 

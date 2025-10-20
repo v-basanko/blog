@@ -50,7 +50,7 @@ export const getBlogById = async (id: string) => {
     });
 
     return { success: blog };
-  } catch (ex) {
+  } catch {
     return { error: 'Error fetching blog!' };
   }
 };

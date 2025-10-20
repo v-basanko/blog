@@ -34,6 +34,10 @@ export const editBlog = async (data: BlogSchemaType, id: string) => {
     return { error: 'Blog not found!' };
   }
 
+  if (blog.userId !== userId) {
+    return { error: 'You are not authorized to edit this blog!' };
+  }
+
   await db.blog.update({
     where: { id },
     data: {

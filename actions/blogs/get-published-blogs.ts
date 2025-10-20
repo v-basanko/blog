@@ -19,69 +19,66 @@ export const getPublishedBlogs = async ({
   const session = await auth();
   const userId = session?.user?.userId;
 
-  try {
-    const blogs = await db.blog.findMany({
-      skip,
-      take: limit,
-      orderBy: {
-        createdAt: 'desc',
-      },
-      where: {
-        title: {
-          contains: title,
-          mode: 'insensitive',
-        },
-        isPublished: true,
-        ...(tag ? { tags: { has: tag } } : {}),
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
-        },
-        _count: {
-          select: {
-            claps: true,
-            comments: true,
-          },
-        },
-        claps: {
-          where: {
-            userId,
-          },
-          select: {
-            id: true,
-          },
-        },
-        bookmarks: {
-          where: {
-            userId,
-          },
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
+  // Reusable where condition
+  const whereCondition = {
+    title: {
+      contains: title,
+      mode: 'insensitive' as const,
+    },
+    isPublished: true,
+    ...(tag ? { tags: { has: tag } } : {}),
+  };
 
-    const totalBlogsCount = await db.blog.count({
-      where: {
-        title: {
-          contains: title,
-          mode: 'insensitive',
+  try {
+    const [blogs, totalBlogsCount] = await Promise.all([
+      db.blog.findMany({
+        skip,
+        take: limit,
+        orderBy: {
+          createdAt: 'desc',
         },
-        isPublished: true,
-        ...(tag ? { tags: { has: tag } } : {}),
-      },
-    });
+        where: whereCondition,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              image: true,
+            },
+          },
+          _count: {
+            select: {
+              claps: true,
+              comments: true,
+            },
+          },
+          claps: {
+            where: {
+              userId,
+            },
+            select: {
+              id: true,
+            },
+          },
+          bookmarks: {
+            where: {
+              userId,
+            },
+            select: {
+              id: true,
+            },
+          },
+        },
+      }),
+      db.blog.count({
+        where: whereCondition,
+      }),
+    ]);
 
     const hasMore = page * limit < totalBlogsCount;
 
     return { success: { blogs, hasMore } };
-  } catch (e) {
+  } catch {
     return { error: 'Error fetching blogs!' };
   }
 };

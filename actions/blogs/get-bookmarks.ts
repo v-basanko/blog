@@ -75,7 +75,7 @@ export const getBookmarks = async ({ page = 1, limit = 5 }: PaginationParams) =>
     const hasMore = page * limit < totalBookmarksCount;
 
     return { success: { blogs, hasMore } };
-  } catch (e) {
+  } catch {
     return { error: 'Error fetching bookmarks!' };
   }
 };

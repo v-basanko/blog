@@ -58,7 +58,7 @@ const getComments = async ({ blogId, parentId, userId }: GetCommentsProps) => {
     });
 
     return { success: { comments } };
-  } catch (e) {
+  } catch {
     return {
       error: 'Something went wrong',
     };

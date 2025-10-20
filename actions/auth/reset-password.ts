@@ -37,7 +37,7 @@ export const resetPassword = async (data: ResetPasswordSchemaType, token: string
 
   const { password } = validateFields.data;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 12);
 
   await db.user.update({
     where: {
